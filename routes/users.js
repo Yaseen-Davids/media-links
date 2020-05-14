@@ -7,7 +7,10 @@ const { ensureAuthenticated } = require("../repositories/base");
 router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
   try {
     const user = await GetUserById(req.user.id);
-    return res.json(user || {}).end();
+    if (!user) {
+      throw new Error("User not found!");
+    }
+    return res.send(user).end();
   } catch (e) {
     return next(e);
   }
