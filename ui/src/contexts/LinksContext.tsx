@@ -51,7 +51,7 @@ export const LinksContext = createContext<LinksContextState>({
   setLocalStorageOptions: () => { },
 });
 
-const defaultLocalStorage = '"{"options":{"autoplay":true,"filters":["song"],"sort":"sortDateDescending","downloadState":"active"}}"';
+const defaultLocalStorage = '{"options":{"autoplay":true,"filters":["song"],"sort":"sortDateDescending","downloadState":"active"}}';
 
 type localStorageOptions = {
   autoplay: boolean;
