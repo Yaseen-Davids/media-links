@@ -10,6 +10,7 @@ export const checkLogin = async (setLoggedIn: any) => {
     }
     setLoggedIn(true);
   } catch (e) {
+    console.log("Login Guard error", e);
     setLoggedIn(false);
   }
 }

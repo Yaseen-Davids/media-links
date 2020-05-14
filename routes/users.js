@@ -11,7 +11,8 @@ router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
       throw new Error("User not found!");
     }
     return res.send(user).end();
-  } catch (e) {
+  } catch (error) {
+    console.log("error", error);
     return next(e);
   }
 });
