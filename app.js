@@ -68,7 +68,7 @@ app.use(function (req, res, next) {
 
 app.use(function (err, req, res, next) {
   res.status(err.status || 500);
-  res.json({ message: err.message }).end();
+  res.send(err.message ? err.message : "Error unexpected!").end();
 });
 
 module.exports = app;
