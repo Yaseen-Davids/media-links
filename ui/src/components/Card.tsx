@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useContext } from "react";
 import styled from "styled-components";
 import { Button } from "semantic-ui-react";
-import { YoutubeLinks } from "../models/youtube-links";
-import { deleteYoutubeLink } from "../lib/youtube-links";
+import { MediaLinks } from "../models/media-links";
+import { deleteMediaLink } from "../lib/media-links";
 import { LinksContext } from "../contexts/LinksContext";
 
 const CardContainer = styled.div`
@@ -46,7 +46,7 @@ const CardButtons = styled.div`
 `;
 
 type CardProps = {
-  link: YoutubeLinks;
+  link: MediaLinks;
 };
 
 export const Card: React.FC<CardProps> = ({ link }) => {
@@ -57,7 +57,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
 
   const handleDeleteLink = async (id: number) => {
     setDeleteLoading(true);
-    await deleteYoutubeLink(id);
+    await deleteMediaLink(id);
     setDeleteLink(false);
     setDeleteLoading(false);
     setReload(true);

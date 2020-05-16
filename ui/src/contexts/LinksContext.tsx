@@ -1,7 +1,7 @@
 import React, { createContext, useMemo, useState, useEffect, useContext } from "react";
 import { Loading, defaultLoading } from "../models/loading";
-import { YoutubeLinks } from "../models/youtube-links";
-import { getAllYoutubeLinks } from "../lib/youtube-links";
+import { MediaLinks } from "../models/media-links";
+import { getAllMediaLinks } from "../lib/media-links";
 import { FilterOptions, sortOptions, downloadStateOptions } from "../models/filters";
 import { UserContext } from "./UserContext";
 
@@ -9,22 +9,22 @@ const defaultCurrentVideo = { index: 0, author_url: "", downloaded: 0, html_ifra
 
 export type LinksContextState = {
   loading: Loading;
-  links: YoutubeLinks[];
+  links: MediaLinks[];
   reload: boolean;
   filters: FilterOptions;
   sort: string;
   downloadState: string;
-  currentVideo: YoutubeLinks;
+  currentVideo: MediaLinks;
   playing: boolean;
   autoplay: boolean;
-  setLinks(links: YoutubeLinks[]): void;
+  setLinks(links: MediaLinks[]): void;
   setReload(reload: boolean): void;
   setFilters(filters: FilterOptions): void;
   setSort(sort: string): void;
   setDownloadState(downloadState: string): void;
-  setCurrentVideo(currentVideo: YoutubeLinks): void;
+  setCurrentVideo(currentVideo: MediaLinks): void;
   setPlaying(playing: boolean): void;
-  playVideoByCurrent(currentVideo: YoutubeLinks, index: number): void;
+  playVideoByCurrent(currentVideo: MediaLinks, index: number): void;
   setAutoplay(autoplay: boolean): void;
   setLocalStorageOptions(which: string, value: any): void;
 };
@@ -63,17 +63,17 @@ type localStorageOptions = {
 export const LinksProvider: React.FC = ({ children }) => {
   const localStorageOptions: localStorageOptions = JSON.parse(localStorage.getItem("options") || defaultLocalStorage).options;
   const [loading, setLoading] = useState<Loading>(defaultLoading);
-  const [links, setLinks] = useState<YoutubeLinks[]>([]);
+  const [links, setLinks] = useState<MediaLinks[]>([]);
   const [reload, setReload] = useState<boolean>(true);
   const [filters, setFilters] = useState<FilterOptions>(localStorageOptions.filters);
   const [sort, setSort] = useState<string>(localStorageOptions.sort);
   const [downloadState, setDownloadState] = useState<string>(localStorageOptions.downloadState);
-  const [currentVideo, setCurrentVideo] = useState<YoutubeLinks>(defaultCurrentVideo);
+  const [currentVideo, setCurrentVideo] = useState<MediaLinks>(defaultCurrentVideo);
   const [playing, setPlaying] = useState<boolean>(false);
   const [autoplay, setAutoplay] = useState<boolean>(localStorageOptions.autoplay || false);
   const { user } = useContext(UserContext);
 
-  const playVideoByCurrent = async (currentVideo: YoutubeLinks, index: number) => {
+  const playVideoByCurrent = async (currentVideo: MediaLinks, index: number) => {
     const nextVideoIndex = links.findIndex(item => item.id == currentVideo.id);
     const nextVideoToPlay = links[nextVideoIndex + index];
     if (nextVideoToPlay) {
@@ -98,7 +98,7 @@ export const LinksProvider: React.FC = ({ children }) => {
         loading: true,
         error: undefined
       });
-      const result = await getAllYoutubeLinks({
+      const result = await getAllMediaLinks({
         filters,
         sort: sortOptions[sort],
         downloadState: downloadStateOptions[downloadState],

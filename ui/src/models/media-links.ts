@@ -1,4 +1,4 @@
-export type YoutubeLinks = {
+export type MediaLinks = {
   index: number;
   id: number;
   title: string;

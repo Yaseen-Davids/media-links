@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const {
-  createYoutubeLink,
-  getAllYoutubeLinks,
-  deleteYoutubeLink,
+  createMediaLink,
+  getAllMediaLinks,
+  deleteMediaLink,
 } = require("../repositories/youtube");
 
 router.post("/all", async (req, res, next) => {
   try {
-    const data = await getAllYoutubeLinks(req.body);
+    const data = await getAllMediaLinks(req.body);
     return res.json({ data }).end();
   } catch (error) {
     return next(error);
@@ -17,7 +17,7 @@ router.post("/all", async (req, res, next) => {
 
 router.post("/create", async (req, res, next) => {
   try {
-    await createYoutubeLink(req.body);
+    await createMediaLink(req.body);
     return res.status(200).end();
   } catch (error) {
     return next(error);
@@ -26,7 +26,7 @@ router.post("/create", async (req, res, next) => {
 
 router.delete("/delete/:id", async (req, res, next) => {
   try {
-    await deleteYoutubeLink(req.params.id);
+    await deleteMediaLink(req.params.id);
     return res.json({ message: "Successfully deleted link." }).end();
   } catch (error) {
     return next(error);

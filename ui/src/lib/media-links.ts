@@ -1,12 +1,12 @@
 import axios from "axios";
-import { YoutubeLinks } from "../models/youtube-links";
+import { MediaLinks } from "../models/media-links";
 
-export const getAllYoutubeLinks = async (obj: {
+export const getAllMediaLinks = async (obj: {
   filters: string[];
   sort: { column: string; order: string };
   downloadState: { downloaded: number };
   userId: number;
-}): Promise<YoutubeLinks[]> => {
+}): Promise<MediaLinks[]> => {
   try {
     const resp = await axios.post("/youtube/all", obj);
 
@@ -26,10 +26,10 @@ type Link = {
   userId: number;
 };
 
-export const createYoutubeLink = async (body: Link) =>
+export const createMediaLink = async (body: Link) =>
   await axios.post("/youtube/create", body);
 
-export const deleteYoutubeLink = async (id: number) => {
+export const deleteMediaLink = async (id: number) => {
   try {
     const resp = await axios.delete(`/youtube/delete/${id}`);
 

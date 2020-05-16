@@ -1,6 +1,6 @@
-import React, { useContext, useCallback } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import { YoutubeLinks } from "../../models/youtube-links";
+import { MediaLinks } from "../../models/media-links";
 import { Card } from "../../components/Card";
 import { CreateLink } from "./CreateLink";
 import { Icon } from "semantic-ui-react";
@@ -111,7 +111,7 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
         ) : (
             <CardsWrapper>
               {links.length > 0 ? (
-                links.map((link: YoutubeLinks, index: number) => (
+                links.map((link: MediaLinks, index: number) => (
                   <Card key={index} link={link} />
                 ))
               ) : (

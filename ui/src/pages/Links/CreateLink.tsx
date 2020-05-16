@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Input, Button, Select, Message } from "semantic-ui-react";
 import { Form, Field } from "react-final-form";
 import { LinksContext } from "../../contexts/LinksContext";
-import { createYoutubeLink } from "../../lib/youtube-links";
+import { createMediaLink } from "../../lib/media-links";
 import { UserContext } from "../../contexts/UserContext";
 
 const Container = styled.div`
@@ -39,6 +39,11 @@ const FormInput = styled.input`
   }
 `;
 
+enum ResponseMessageType {
+  Success = "success",
+  Error = "error",
+};
+
 type CreateLinkProps = {};
 
 export const CreateLink: React.FC<CreateLinkProps> = () => {
@@ -61,7 +66,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
         onSubmit={async (fields: { link: string }) => {
           setLoading(true);
           try {
-            await createYoutubeLink({
+            await createMediaLink({
               url: fields.link,
               type: type || "song",
               userId: user.id
@@ -109,7 +114,16 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                 Add
               </Button>
             </Input>
-            {message.active && <Message {...message.type} style={{ marginTop: "10px" }} onDismiss={handleDismiss}>{message.text}</Message>}
+            {message.active && (
+              <Message
+                success={message.type == ResponseMessageType.Success}
+                error={message.type == ResponseMessageType.Error}
+                style={{ marginTop: "10px" }}
+                onDismiss={handleDismiss}
+              >
+                {message.text}
+              </Message>
+            )}
           </form>
         )}
       />
