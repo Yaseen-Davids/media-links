@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useContext } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { Button } from "semantic-ui-react";
 import { MediaLinks } from "../models/media-links";
@@ -25,12 +25,21 @@ const CardTitle = styled.div`
   padding: 5px;
   text-align: left;
   color: #d4d4d4;
+  @media (max-width: 850px) and (min-width: 1px) {
+    font-size: 11px;
+  };
   .link-type {
     text-transform: capitalize;
+    @media (max-width: 850px) and (min-width: 1px) {
+      font-size: 9px;
+    };
   }
   .meta-data {
     color: #9f9f9f;
     font-size: 11px;
+    @media (max-width: 850px) and (min-width: 1px) {
+      font-size: 9px;
+    };
   }
 `;
 
@@ -67,10 +76,6 @@ export const Card: React.FC<CardProps> = ({ link }) => {
     setPlaying(true);
     setCurrentVideo(link);
   }
-
-  // const url = useMemo(() => {
-  //   return link.author_url.split("https://youtu.be/")[1];
-  // }, [link.author_url]);
 
   return (
     <CardContainer>
@@ -127,16 +132,6 @@ export const Card: React.FC<CardProps> = ({ link }) => {
                       onClick={handlePlayVideo}
                     />
                   )}
-                {/* <Button
-                  basic
-                  circular
-                  size="small"
-                  color="blue"
-                  icon="download"
-                  title="Download"
-                  target="__blank"
-                  href={`https://y2mate.com/youtube/${url}`}
-                /> */}
                 <Button
                   basic
                   circular

@@ -29,8 +29,36 @@ const CheckboxWrapper = styled.div`
   color: #9f9f9f;
   p {
     margin-left: 10px;
+    @media (max-width: 850px) and (min-width: 1px) {
+      font-size: 11px;
+    }
   }
-  &&&&&& label::before {
-    background-color: #666;
+  &&&&&& div {
+    @media (max-width: 850px) and (min-width: 1px) {
+      min-height: 1rem;
+    }
+  }
+  &&&&&& {
+    @media (max-width: 850px) and (min-width: 1px) {
+      min-height: 1rem;
+      label {
+        min-height: 1rem;
+        height: 1rem;
+        width: 3rem;
+      }
+      label::before {
+        min-height: 1rem;
+        height: 1rem;
+        width: 3rem;
+      }
+      label::after {
+        min-height: 1rem;
+        height: 1rem;
+        width: 1rem;
+      }
+    }
+    label::before {
+      background-color: #666;
+    }
   }
 `;

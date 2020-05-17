@@ -15,7 +15,7 @@ export const VideoPlayButtons = () => {
 
   return playing ? (
     <div>
-      <Button
+      <Btn
         basic
         circular
         color="grey"
@@ -25,7 +25,7 @@ export const VideoPlayButtons = () => {
         disabled={canPlayPrev}
         style={{ transform: "scaleX(-1)" }}
       />
-      <Button
+      <Btn
         basic
         circular
         color="grey"
@@ -38,3 +38,11 @@ export const VideoPlayButtons = () => {
   )
     : (<></>)
 }
+
+const Btn = styled(Button)`
+  @media (max-width: 850px) and (min-width: 1px) {
+    &&&&&& {
+      font-size: 11px;
+    }
+  }
+`;

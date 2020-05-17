@@ -10,12 +10,18 @@ import SoundCloudIcon from "../../icons/soundcloud.svg";
 
 const Container = styled.div`
   font-size: 12px;
+  @media (max-width: 850px) and (min-width: 1px) {
+    font-size: 11px;
+  };
 `;
 
 const DropdownSelect = styled(Select)`
   &&&&&&& {
     color: #cecece;
     background-color: #1f1f1f;
+    @media (max-width: 850px) and (min-width: 1px) {
+      font-size: 11px;
+    }
     div.text {
       color: #cecece;
     }
@@ -25,9 +31,22 @@ const DropdownSelect = styled(Select)`
       div {
         border: 1px solid #333;
         font-size: 12px;
+        @media (max-width: 850px) and (min-width: 1px) {
+          font-size: 11px;
+        };
       }
       span {
         color: #cecece;
+      }
+    }
+  }
+`;
+
+const FormContainer = styled.form`
+  &&&&&&& {
+    button {
+      @media (max-width: 850px) and (min-width: 1px) {
+        font-size: 11px;
       }
     }
   }
@@ -46,6 +65,11 @@ const SupportedFormatWrapper = styled.div`
     display: grid;
     grid-template-columns: min-content min-content;
     grid-gap: 5px;
+  }
+  @media (max-width: 850px) and (min-width: 1px) {
+    p {
+      padding-left: 0px;
+    }
   }
 `;
 
@@ -105,7 +129,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
           }
         }}
         render={({ handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
+          <FormContainer onSubmit={handleSubmit}>
             <Input action fluid>
               <Field
                 name="link"
@@ -150,7 +174,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                 {message.text}
               </Message>
             )}
-          </form>
+          </FormContainer>
         )}
       />
     </Container>

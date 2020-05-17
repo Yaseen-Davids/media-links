@@ -9,12 +9,19 @@ const Container = styled.div`
   margin-bottom: 20px;
   grid-gap: 10px;
   font-size: 12px;
+  @media (max-width: 850px) and (min-width: 1px) {
+    grid-template-columns: 1fr;
+    grid-template-row: min-content 1fr 1fr;
+  }
 `;
 
 const DropdownSelect = styled(Dropdown)`
   &&&&&&& {
     color: #cecece;
     background-color: #1f1f1f;
+    @media (max-width: 850px) and (min-width: 1px) {
+      font-size: 11px;
+    }
     div.text {
       color: #cecece;
     }
@@ -28,6 +35,9 @@ const DropdownSelect = styled(Dropdown)`
       div {
         border-top: 1px solid #333;
         font-size: 12px;
+        @media (max-width: 850px) and (min-width: 1px) {
+          font-size: 11px;
+        }
       }
       span {
         color: #cecece;

@@ -22,12 +22,26 @@ const Container = styled.div`
   ;
   grid-template-columns: 200px 1fr 40%;
   grid-template-rows: min-content 1fr;
+  @media (max-width: 850px) and (min-width: 1px) {
+    grid-template-areas: 
+    "header"
+    "playlist"
+    "content"
+    ;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content min-content 1fr;
+  }
 `;
 
 const Header = styled.div`
   grid-area: header;
   display: grid;
   grid-template-columns: 200px 1fr 40%;
+  @media (max-width: 850px) and (min-width: 1px) {
+    padding: 10px;
+    grid-template-columns: 1fr;
+    grid-template-row: min-content 1fr 1fr;
+  }
 `;
 
 const Content = styled.div`
@@ -42,6 +56,9 @@ const VideoPlayerContent = styled.div`
   position: relative;
   height: 100%;
   grid-area: playlist;
+  @media (max-width: 850px) and (min-width: 1px) {
+    margin-bottom: 10px;
+  };
 `;
 
 const AppNameHeader = styled.div`
@@ -52,6 +69,9 @@ const AppNameHeader = styled.div`
     i {
       margin-left: 5px;
       font-size: 13px;
+    }
+    @media (max-width: 850px) and (min-width: 1px) {
+      padding: 0px;
     }
   }
 `;
@@ -71,12 +91,22 @@ const HeaderPlaylistWrapper = styled.div`
     font-size: 20px;
     color: #b4b4b4;
   }
+  @media (max-width: 850px) and (min-width: 1px) {
+    padding: 0px;
+    h4 {
+      font-size: 11px;
+    }
+  }
 `;
 
 const CardsWrapper = styled.div`
   overflow-y: auto;
   div:last-child {
     margin-bottom: 0px;
+  }
+  @media (max-width: 850px) and (min-width: 1px) {
+    padding-left: 10px;
+    padding-right: 10px;
   }
 `;
 

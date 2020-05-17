@@ -22,8 +22,6 @@ export const HydrateUser = () => {
   return null;
 };
 
-// https://youtu.be/XYPCxaOv35s
-
 const App: FC = () => (
   <Router>
     <Route component={LoginGuard} />
@@ -51,6 +49,10 @@ const Container = styled.div`
   max-height: 100vh;
   height: 100vh;
   background-color: #121212;
+@media (max-width: 850px) and (min-width: 1px) {
+    height: 100%;
+    max-height: 100%;
+  }
 `;
 
 export default App;
