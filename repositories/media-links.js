@@ -10,21 +10,31 @@ module.exports = {
     }
 
     return await knex.transaction(async (trx) => {
-      const { data } = await axios.get(
-        `https://www.youtube.com/oembed?url=${url}&format=json`
-      );
+      let result;
 
-      if (!data) throw "Error getting youtube link";
+      if (url.includes("youtube.com") || url.includes("youtu.be")) {
+        const { data } = await axios.get(
+          `https://www.youtube.com/oembed?url=${url}&format=json`
+        );
+        result = data;
+      } else if (url.includes("soundcloud.com")) {
+        const { data } = await axios.get(
+          `https://soundcloud.com/oembed?url=${url}&format=json`
+        );
+        result = data;
+      }
+
+      if (!result) throw "Error getting media link";
 
       await trx("media_links").insert({
-        title: data.title,
+        title: result.title,
         type: type || "",
-        thumbnail_url: data.thumbnail_url,
-        html_iframe: data.html,
+        thumbnail_url: result.thumbnail_url,
         author_url: url,
         downloaded: 0,
         user_id: userId,
         date_added: new Date(),
+        provided_name: result.provider_name,
       });
     });
   },

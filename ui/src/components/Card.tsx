@@ -68,9 +68,9 @@ export const Card: React.FC<CardProps> = ({ link }) => {
     setCurrentVideo(link);
   }
 
-  const url = useMemo(() => {
-    return link.author_url.split("https://youtu.be/")[1];
-  }, [link.author_url]);
+  // const url = useMemo(() => {
+  //   return link.author_url.split("https://youtu.be/")[1];
+  // }, [link.author_url]);
 
   return (
     <CardContainer>
@@ -127,7 +127,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
                       onClick={handlePlayVideo}
                     />
                   )}
-                <Button
+                {/* <Button
                   basic
                   circular
                   size="small"
@@ -136,7 +136,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
                   title="Download"
                   target="__blank"
                   href={`https://y2mate.com/youtube/${url}`}
-                />
+                /> */}
                 <Button
                   basic
                   circular

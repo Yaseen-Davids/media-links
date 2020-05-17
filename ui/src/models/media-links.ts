@@ -4,7 +4,8 @@ export type MediaLinks = {
   title: string;
   type: string;
   thumbnail_url: string;
-  html_iframe: string;
   author_url: string;
   downloaded: number;
+  date_added: Date;
+  provided_name: string;
 };

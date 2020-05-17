@@ -16,21 +16,17 @@ const GetUserById = async (id) =>
 const CreateUser = async (person) => {
   return bcrypt.genSalt(10, (err, salt) => {
     if (err) {
-      return err;
+      throw err;
     }
-    bcrypt.hash(person.password, salt, async (err, hash) => {
-      if (err) {
-        return err;
+    return bcrypt.hash(person.password, salt, async (error, hash) => {
+      if (error) {
+        throw error;
       }
-      try {
-        return await knex("users").insert({
-          username: person.username,
-          email: person.email,
-          password: hash,
-        });
-      } catch (e) {
-        return e;
-      }
+      return await knex("users").insert({
+        username: person.username,
+        email: person.email,
+        password: hash,
+      });
     });
   });
 };

@@ -5,6 +5,8 @@ import { Form, Field } from "react-final-form";
 import { LinksContext } from "../../contexts/LinksContext";
 import { createMediaLink } from "../../lib/media-links";
 import { UserContext } from "../../contexts/UserContext";
+import YouTubeIcon from "../../icons/youtube.svg";
+import SoundCloudIcon from "../../icons/soundcloud.svg";
 
 const Container = styled.div`
   font-size: 12px;
@@ -28,6 +30,22 @@ const DropdownSelect = styled(Select)`
         color: #cecece;
       }
     }
+  }
+`;
+
+const SupportedFormatWrapper = styled.div`
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 10px;
+  padding-top: 5px;
+  p {
+    padding-left: 5px;
+    color: #d4d4d4;
+  }
+  div {
+    display: grid;
+    grid-template-columns: min-content min-content;
+    grid-gap: 5px;
   }
 `;
 
@@ -62,6 +80,13 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
 
   return (
     <Container>
+      <SupportedFormatWrapper>
+        <p>Supported Formats: </p>
+        <div>
+          <img src={YouTubeIcon} alt="YouTube Logo" style={{ width: "20px" }} />
+          <img src={SoundCloudIcon} alt="SoundCloud Logo" style={{ width: "20px" }} />
+        </div>
+      </SupportedFormatWrapper>
       <Form
         onSubmit={async (fields: { link: string }) => {
           setLoading(true);
@@ -90,7 +115,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                   <>
                     <FormInput
                       {...input}
-                      placeholder="Enter YouTube link"
+                      placeholder="Enter Media link"
                     />
                   </>
                 )}
@@ -103,6 +128,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                 ]}
                 placeholder="Type"
                 onChange={handleTypeChange}
+                value="song"
               />
               <Button
                 basic

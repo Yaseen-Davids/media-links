@@ -10,7 +10,7 @@ module.exports = (passport) => {
         const user = await GetUserByUsername(username);
 
         if (!user || user == undefined) {
-          return done(null, false, { message: "User does not exist" });
+          throw "User does not exist";
         }
 
         bcrypt.compare(password, user.password, (err, isMatch) => {
@@ -26,7 +26,7 @@ module.exports = (passport) => {
           }
         });
       } catch (error) {
-        return error;
+        return done(null, false, { message: error });
       }
     })
   );

@@ -89,7 +89,7 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
       <Header>
         <AppNameHeader>
           <h3>
-            <strong>You</strong>Tube Playlist
+            <strong>Media</strong>Links
             <Icon name="list" />
           </h3>
         </AppNameHeader>

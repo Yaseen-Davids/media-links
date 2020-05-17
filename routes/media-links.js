@@ -4,7 +4,7 @@ const {
   createMediaLink,
   getAllMediaLinks,
   deleteMediaLink,
-} = require("../repositories/youtube");
+} = require("../repositories/media-links");
 
 router.post("/all", async (req, res, next) => {
   try {
@@ -20,6 +20,7 @@ router.post("/create", async (req, res, next) => {
     await createMediaLink(req.body);
     return res.status(200).end();
   } catch (error) {
+    console.log("error => ", error);
     return next(error);
   }
 });

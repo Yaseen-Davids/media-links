@@ -20,7 +20,7 @@ const passport = require("passport");
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const youtubeRouter = require("./routes/youtube");
+const youtubeRouter = require("./routes/media-links");
 
 const app = express();
 

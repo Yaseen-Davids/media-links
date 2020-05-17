@@ -37,7 +37,7 @@ router.post("/login", async (req, res, next) => {
 router.post("/register", async (req, res, next) => {
   try {
     await CreateUser(req.body);
-    res.send();
+    return res.send();
   } catch (error) {
     return next(error);
   }

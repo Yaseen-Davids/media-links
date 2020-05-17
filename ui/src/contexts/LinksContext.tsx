@@ -5,7 +5,7 @@ import { getAllMediaLinks } from "../lib/media-links";
 import { FilterOptions, sortOptions, downloadStateOptions } from "../models/filters";
 import { UserContext } from "./UserContext";
 
-const defaultCurrentVideo = { index: 0, author_url: "", downloaded: 0, html_iframe: "", id: 0, thumbnail_url: "", title: "", type: "" };
+const defaultCurrentVideo = { index: 0, author_url: "", downloaded: 0, id: 0, thumbnail_url: "", title: "", type: "", date_added: new Date(), provided_name: "" };
 
 export type LinksContextState = {
   loading: Loading;
