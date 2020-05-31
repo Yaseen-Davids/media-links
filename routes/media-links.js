@@ -17,8 +17,8 @@ router.post("/all", async (req, res, next) => {
 
 router.post("/create", async (req, res, next) => {
   try {
-    await createMediaLink(req.body);
-    return res.status(200).end();
+    const data = await createMediaLink(req.body);
+    return res.json({ data });
   } catch (error) {
     console.log("error => ", error);
     return next(error);

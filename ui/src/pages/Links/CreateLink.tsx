@@ -89,7 +89,7 @@ enum ResponseMessageType {
 type CreateLinkProps = {};
 
 export const CreateLink: React.FC<CreateLinkProps> = () => {
-  const { setReload } = useContext(LinksContext);
+  const { setLinks, links } = useContext(LinksContext);
   const [message, setMessage] = useState<Partial<{ type: string; text: string; active: boolean }>>({ type: "", text: "", active: false });
   const [loading, setLoading] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
@@ -115,15 +115,18 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
         onSubmit={async (fields: { link: string }) => {
           setLoading(true);
           try {
-            await createMediaLink({
+            const { data } = await createMediaLink({
               url: fields.link,
               type: type || "song",
               userId: user.id
             });
-            setReload(true);
-            setMessage({ type: "success", text: "Successfully added link.", active: true });
+            links.unshift(...data.data);
+            console.log("links => ", links);
+            setLinks(links);
+            // setMessage({ type: "success", text: "Successfully added link.", active: true });
           } catch (e) {
-            setMessage({ type: "error", text: e.message || "Error creating link.", active: true });
+            console.log(e);
+            setMessage({ type: "error", text: "Error creating link.", active: true });
           } finally {
             setLoading(false);
           }
@@ -152,7 +155,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                 ]}
                 placeholder="Type"
                 onChange={handleTypeChange}
-                value="song"
+                defaultValue="song"
               />
               <Button
                 basic

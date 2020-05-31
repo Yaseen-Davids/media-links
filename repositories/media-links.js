@@ -9,24 +9,10 @@ module.exports = {
       throw "URL no specified";
     }
 
-    return await knex.transaction(async (trx) => {
-      let result;
+    const result = await getMediaDataFromUrl(url);
 
-      if (url.includes("youtube.com") || url.includes("youtu.be")) {
-        const { data } = await axios.get(
-          `https://www.youtube.com/oembed?url=${url}&format=json`
-        );
-        result = data;
-      } else if (url.includes("soundcloud.com")) {
-        const { data } = await axios.get(
-          `https://soundcloud.com/oembed?url=${url}&format=json`
-        );
-        result = data;
-      }
-
-      if (!result) throw "Error getting media link";
-
-      await trx("media_links").insert({
+    const [linkId] = await knex("media_links")
+      .insert({
         title: result.title,
         type: type || "",
         thumbnail_url: result.thumbnail_url,
@@ -35,8 +21,10 @@ module.exports = {
         user_id: userId,
         date_added: new Date(),
         provided_name: result.provider_name,
-      });
-    });
+      })
+      .returning("id");
+
+    return await knex("media_links").select("*").where("id", linkId); // Get added link
   },
   getAllMediaLinks: async (obj) => {
     const filters = obj.filters.length > 0 ? obj.filters : ["song"];
@@ -54,4 +42,21 @@ module.exports = {
   deleteMediaLink: async (id) => {
     return await knex("media_links").update("downloaded", 1).where("id", id);
   },
+};
+
+const getMediaDataFromUrl = async (url) => {
+  let result;
+  if (url.includes("youtube.com") || url.includes("youtu.be")) {
+    result = await axios.get(
+      `https://www.youtube.com/oembed?url=${url}&format=json`
+    );
+  } else if (url.includes("soundcloud.com")) {
+    result = await axios.get(
+      `https://soundcloud.com/oembed?url=${url}&format=json`
+    );
+  }
+
+  if (!result || !result.data) throw "Error getting media link";
+
+  return result.data;
 };
