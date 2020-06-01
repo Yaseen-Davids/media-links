@@ -90,7 +90,7 @@ type CreateLinkProps = {};
 
 export const CreateLink: React.FC<CreateLinkProps> = () => {
   const { setLinks, links } = useContext(LinksContext);
-  const [message, setMessage] = useState<Partial<{ type: string; text: string; active: boolean }>>({ type: "", text: "", active: false });
+  // const [message, setMessage] = useState<Partial<{ type: string; text: string; active: boolean }>>({ type: "", text: "", active: false });
   const [loading, setLoading] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
   const required = (value: any) => value ? undefined : "Please enter a YouTube link.";
@@ -100,7 +100,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
     setType(value);
   };
 
-  const handleDismiss = () => setMessage({ active: false });
+  // const handleDismiss = () => setMessage({ active: false });
 
   return (
     <Container>
@@ -120,13 +120,12 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
               type: type || "song",
               userId: user.id
             });
-            links.unshift(...data.data);
-            console.log("links => ", links);
-            setLinks(links);
+            links.splice(0, 0, data.data);
+            setLinks([...links]);
             // setMessage({ type: "success", text: "Successfully added link.", active: true });
           } catch (e) {
-            console.log(e);
-            setMessage({ type: "error", text: "Error creating link.", active: true });
+            alert(e);
+            // setMessage({ type: "error", text: "Error creating link.", active: true });
           } finally {
             setLoading(false);
           }
@@ -167,7 +166,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                 Add
               </Button>
             </Input>
-            {message.active && (
+            {/* {message.active && (
               <Message
                 success={message.type == ResponseMessageType.Success}
                 error={message.type == ResponseMessageType.Error}
@@ -176,7 +175,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
               >
                 {message.text}
               </Message>
-            )}
+            )} */}
           </FormContainer>
         )}
       />

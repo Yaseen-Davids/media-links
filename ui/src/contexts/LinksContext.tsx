@@ -154,6 +154,7 @@ export const LinksProvider: React.FC = ({ children }) => {
     currentVideo,
     playing,
     autoplay,
+    links
   ]);
 
   return (

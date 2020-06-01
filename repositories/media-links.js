@@ -24,7 +24,7 @@ module.exports = {
       })
       .returning("id");
 
-    return await knex("media_links").select("*").where("id", linkId); // Get added link
+    return await knex("media_links").first("*").where("id", linkId); // Get added link
   },
   getAllMediaLinks: async (obj) => {
     const filters = obj.filters.length > 0 ? obj.filters : ["song"];

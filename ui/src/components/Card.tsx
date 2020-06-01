@@ -59,7 +59,7 @@ type CardProps = {
 };
 
 export const Card: React.FC<CardProps> = ({ link }) => {
-  const { setReload, setCurrentVideo, playing, setPlaying, currentVideo } = useContext(LinksContext);
+  const { setCurrentVideo, playing, setPlaying, currentVideo, links, setLinks } = useContext(LinksContext);
   const [deleteLink, setDeleteLink] = useState<boolean>(false);
   const [active, setActive] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
@@ -67,9 +67,11 @@ export const Card: React.FC<CardProps> = ({ link }) => {
   const handleDeleteLink = async (id: number) => {
     setDeleteLoading(true);
     await deleteMediaLink(id);
-    setDeleteLink(false);
+    const linkIndex = links.findIndex(link => link.id === id);
+    links.splice(linkIndex, 1);
+    setLinks([...links]);
     setDeleteLoading(false);
-    setReload(true);
+    setDeleteLink(false);
   };
 
   const handlePlayVideo = () => {

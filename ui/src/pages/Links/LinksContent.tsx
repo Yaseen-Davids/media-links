@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo, useEffect, useState } from "react";
 import styled from "styled-components";
 import { MediaLinks } from "../../models/media-links";
 import { Card } from "../../components/Card";
@@ -113,6 +113,15 @@ const CardsWrapper = styled.div`
 export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
   const { currentVideo, loading, links } = useContext(LinksContext);
   const { loading: userLoading } = useContext(UserContext);
+  const [dataLoading, setDataLoading] = useState(true);
+
+  useEffect(() => {
+    if (dataLoading) {
+      if ((!loading.loading && loading.loaded) && (!userLoading.loading && userLoading.loaded)) {
+        setDataLoading(false);
+      }
+    }
+  }, [loading, userLoading, dataLoading]);
 
   return (
     <Container>
@@ -136,17 +145,16 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
         </HeaderPlaylistWrapper>
       </Header>
       <Content>
-        {loading.loading || userLoading.loading ? (
+        {dataLoading ? (
           <Loading />
         ) : (
             <CardsWrapper>
               {links.length > 0 ? (
                 links.map((link: MediaLinks, index: number) => (
                   <Card key={index} link={link} />
-                ))
-              ) : (
-                  loading.loaded && userLoading.loaded ? <p style={{ color: "#fafafa" }}>No links found.</p> : <></>
-                )}
+                )))
+                : <p style={{ color: "#fafafa" }}>No links found.</p>
+              }
             </CardsWrapper>
           )}
       </Content>
