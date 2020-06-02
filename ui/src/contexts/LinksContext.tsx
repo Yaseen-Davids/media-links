@@ -125,6 +125,14 @@ export const LinksProvider: React.FC = ({ children }) => {
     setData();
   }, [reload, filters, sort, downloadState, user]);
 
+  useEffect(() => {
+    if (currentVideo.title.length > 0) {
+      document.title = currentVideo.title + " - MediaLinks";
+    } else {
+      document.title = "MediaLinks";
+    }
+  }, [currentVideo]);
+
   const value = useMemo(() => ({
     loading,
     links,
