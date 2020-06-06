@@ -10,6 +10,10 @@ const CardContainer = styled.div`
   padding: 0;
   margin-bottom: 10px;
   background-color: #1f1f1f;
+  cursor: pointer;
+  &:hover {
+    background-color: #1a1a1a;
+  }
 `;
 
 const CardTitleWrapper = styled.div`
@@ -59,9 +63,8 @@ type CardProps = {
 };
 
 export const Card: React.FC<CardProps> = ({ link }) => {
-  const { setCurrentVideo, playing, setPlaying, currentVideo, links, setLinks } = useContext(LinksContext);
+  const { setCurrentVideo, setPlaying, links, setLinks } = useContext(LinksContext);
   const [deleteLink, setDeleteLink] = useState<boolean>(false);
-  const [active, setActive] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const handleDeleteLink = async (id: number) => {
@@ -82,7 +85,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
   return (
     <CardContainer>
       <CardTitleWrapper>
-        <CardTitle onClick={() => setActive(!active)}>
+        <CardTitle onClick={handlePlayVideo}>
           <p>{link.title}</p>
           <p className="meta-data"><span className="link-type">{link.type}</span> - {link.author_url}</p>
         </CardTitle>
@@ -94,7 +97,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
                 circular
                 size="small"
                 icon="close"
-                color="red"
+                color="grey"
                 title="Cancel"
                 disabled={deleteLoading}
                 style={{ background: "#bf360c" }}
@@ -105,46 +108,23 @@ export const Card: React.FC<CardProps> = ({ link }) => {
                 circular
                 size="small"
                 icon="check"
-                color="green"
+                color="grey"
                 title="Confirm"
                 loading={deleteLoading}
                 onClick={() => handleDeleteLink(link.id)}
               />
             </>
           ) : (
-              <>
-                {playing && currentVideo.author_url == link.author_url ? (
-                  <Button
-                    basic
-                    circular
-                    color="grey"
-                    size="small"
-                    icon="pause"
-                    title="Pause"
-                    onClick={() => setPlaying(false)}
-                  />
-                ) : (
-                    <Button
-                      basic
-                      circular
-                      size="small"
-                      color="grey"
-                      icon="play"
-                      title="Play"
-                      onClick={handlePlayVideo}
-                    />
-                  )}
-                <Button
-                  basic
-                  circular
-                  size="small"
-                  color="red"
-                  icon="trash"
-                  title="Delete"
-                  style={{ background: "#bf360c" }}
-                  onClick={() => setDeleteLink(true)}
-                />
-              </>
+              <Button
+                basic
+                circular
+                size="small"
+                color="grey"
+                icon="trash"
+                title="Delete"
+                style={{ background: "#bf360c" }}
+                onClick={() => setDeleteLink(true)}
+              />
             )}
         </CardButtons>
       </CardTitleWrapper>

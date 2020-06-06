@@ -135,14 +135,7 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
         <HeaderActionsWrapper>
           <CreateLink />
           <Filters />
-        </HeaderActionsWrapper>
-        <HeaderPlaylistWrapper>
-          {currentVideo.title.length > 0 ? (
-            <h4>Playing: {currentVideo.title}</h4>
-          ) : (
-              <h4>Playlist Stopped</h4>
-            )}
-        </HeaderPlaylistWrapper>
+        </HeaderActionsWrapper>z
       </Header>
       <Content>
         {dataLoading ? (

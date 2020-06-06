@@ -17,18 +17,22 @@ export const AutoplayCheckbox = () => {
 
   return (
     <CheckboxWrapper>
-      <Checkbox toggle checked={autoplay} onChange={() => handleAutoplay(!autoplay)} />
       <p>Autoplay</p>
+      <Checkbox toggle checked={autoplay} onChange={() => handleAutoplay(!autoplay)} />
     </CheckboxWrapper>
   )
 }
 
 const CheckboxWrapper = styled.div`
   display: flex;
-  flex-direction: row;
   color: #9f9f9f;
+  align-items: center;
+  flex-direction: row;
+  width: 130px;
+  justify-content: space-between;
+  min-height: 31px;
   p {
-    margin-left: 10px;
+    margin: 0 auto;
     @media (max-width: 850px) and (min-width: 1px) {
       font-size: 11px;
     }
