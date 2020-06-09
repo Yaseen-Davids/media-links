@@ -9,7 +9,7 @@ const CardContainer = styled.div`
   width: 100%;
   padding: 0;
   margin-bottom: 10px;
-  background-color: #1f1f1f;
+  background-color: ${(props: { bgcolor: string }) => props.bgcolor};
   cursor: pointer;
   &:hover {
     background-color: #1a1a1a;
@@ -63,7 +63,7 @@ type CardProps = {
 };
 
 export const Card: React.FC<CardProps> = ({ link }) => {
-  const { setCurrentVideo, setPlaying, links, setLinks } = useContext(LinksContext);
+  const { setCurrentVideo, setPlaying, links, setLinks, currentVideo } = useContext(LinksContext);
   const [deleteLink, setDeleteLink] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
@@ -83,7 +83,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
   }
 
   return (
-    <CardContainer>
+    <CardContainer bgcolor={currentVideo.id === link.id ? "#1a1a1a" : "#1f1f1f"}>
       <CardTitleWrapper>
         <CardTitle onClick={handlePlayVideo}>
           <p>{link.title}</p>
