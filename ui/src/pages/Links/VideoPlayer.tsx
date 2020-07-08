@@ -1,41 +1,39 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
 import styled from "styled-components";
 import { LinksContext } from "../../contexts/LinksContext";
-import { AutoplayCheckbox } from "../../components/AutoplayCheckbox";
-import { VideoPlayButtons } from "./VideoPlayButtons";
+import { MediaPlayerContext } from "../../contexts/MediaPlayerContext";
+import BigNumber from "bignumber.js";
 
 const Container = styled.div`
   position: relative;
   height: 100%;
-  display: grid;
-  grid-template-rows: min-content;
 `;
 
 const VideoWrapper = styled.div`
   padding-left: 10px;
   padding-right: 10px;
+  height: 100%;
   .react-video-player {
-    min-height: 350px;
+    height: 100%;
+    min-height: 100%;
     background: black;
     width: 100% !important;
   }
 `;
 
-const ReactPlayerActions = styled.div`
-  background-color: #1f1f1f;
-  padding: 10px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-`;
+type VideoPlayerProps = {};
 
-export const VideoPlayer = () => {
-  const { currentVideo, playing, playVideoByCurrent, autoplay } = useContext(LinksContext);
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
+  const { currentVideo } = useContext(LinksContext);
+  const { playing, autoplay, volume, seek, duration, setDuration, setProgress, setPlaying, playVideoByCurrent } = useContext(MediaPlayerContext);
   const [ended, setEnded] = useState<boolean>(false);
+  const ref: any = useRef();
 
   const handleAutoPlay = () => {
     if (autoplay) {
+      setProgress(0);
+      setDuration(0);
       playVideoByCurrent(currentVideo, 1);
       setEnded(false);
     }
@@ -47,22 +45,30 @@ export const VideoPlayer = () => {
     }
   }, [ended]);
 
+  useEffect(() => {
+    if (seek && ref.current) {
+      setPlaying(false);
+      const p1 = new BigNumber(seek).multipliedBy(duration).dividedBy(100).toNumber();
+      ref.current.seekTo(p1);
+      setPlaying(true);
+    }
+  }, [seek]);
+
   return (
     <Container>
       <VideoWrapper>
         <ReactPlayer
-          controls
+          ref={ref}
+          volume={volume}
           playing={playing}
           url={currentVideo.author_url}
           className="react-video-player"
           onEnded={() => setEnded(true)}
+          onPause={() => setPlaying(false)}
+          onPlay={() => setPlaying(true)}
+          onProgress={(event) => setProgress(event.playedSeconds)}
+          onDuration={(e) => setDuration(e)}
         />
-        <ReactPlayerActions>
-          <div style={{ margin: "auto 0" }}>
-            <AutoplayCheckbox />
-          </div>
-          <VideoPlayButtons />
-        </ReactPlayerActions>
       </VideoWrapper>
     </Container>
   )

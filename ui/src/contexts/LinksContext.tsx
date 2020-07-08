@@ -7,6 +7,16 @@ import { UserContext } from "./UserContext";
 
 const defaultCurrentVideo = { index: 0, author_url: "", downloaded: 0, id: 0, thumbnail_url: "", title: "", type: "", date_added: new Date(), provided_name: "" };
 
+const defaultLocalStorage = '{"options":{"autoplay":true,"filters":["song"],"sort":"sortDateDescending","downloadState":"active", "volume": 0}}';
+
+type LocalStorageOptions = {
+  autoplay: boolean;
+  filters: string[];
+  sort: string;
+  downloadState: string;
+  volume: number;
+};
+
 export type LinksContextState = {
   loading: Loading;
   links: MediaLinks[];
@@ -15,17 +25,13 @@ export type LinksContextState = {
   sort: string;
   downloadState: string;
   currentVideo: MediaLinks;
-  playing: boolean;
-  autoplay: boolean;
+  localStorageOptions: LocalStorageOptions;
   setLinks(links: MediaLinks[]): void;
   setReload(reload: boolean): void;
   setFilters(filters: FilterOptions): void;
   setSort(sort: string): void;
   setDownloadState(downloadState: string): void;
   setCurrentVideo(currentVideo: MediaLinks): void;
-  setPlaying(playing: boolean): void;
-  playVideoByCurrent(currentVideo: MediaLinks, index: number): void;
-  setAutoplay(autoplay: boolean): void;
   setLocalStorageOptions(which: string, value: any): void;
 };
 
@@ -37,31 +43,18 @@ export const LinksContext = createContext<LinksContextState>({
   sort: "sortDateDescending",
   downloadState: "active",
   currentVideo: defaultCurrentVideo,
-  playing: false,
-  autoplay: false,
+  localStorageOptions: JSON.parse(defaultLocalStorage).options,
   setLinks: () => { },
   setReload: () => { },
   setFilters: () => { },
   setSort: () => { },
   setDownloadState: () => { },
   setCurrentVideo: () => { },
-  setPlaying: () => { },
-  playVideoByCurrent: () => { },
-  setAutoplay: () => { },
   setLocalStorageOptions: () => { },
 });
 
-const defaultLocalStorage = '{"options":{"autoplay":true,"filters":["song"],"sort":"sortDateDescending","downloadState":"active"}}';
-
-type localStorageOptions = {
-  autoplay: boolean;
-  filters: string[];
-  sort: string;
-  downloadState: string;
-}
-
 export const LinksProvider: React.FC = ({ children }) => {
-  const localStorageOptions: localStorageOptions = JSON.parse(localStorage.getItem("options") || defaultLocalStorage).options;
+  const localStorageOptions: LocalStorageOptions = JSON.parse(localStorage.getItem("options") || defaultLocalStorage).options;
   const [loading, setLoading] = useState<Loading>(defaultLoading);
   const [links, setLinks] = useState<MediaLinks[]>([]);
   const [reload, setReload] = useState<boolean>(true);
@@ -69,17 +62,7 @@ export const LinksProvider: React.FC = ({ children }) => {
   const [sort, setSort] = useState<string>(localStorageOptions.sort);
   const [downloadState, setDownloadState] = useState<string>(localStorageOptions.downloadState);
   const [currentVideo, setCurrentVideo] = useState<MediaLinks>(defaultCurrentVideo);
-  const [playing, setPlaying] = useState<boolean>(false);
-  const [autoplay, setAutoplay] = useState<boolean>(localStorageOptions.autoplay || false);
   const { user } = useContext(UserContext);
-
-  const playVideoByCurrent = async (currentVideo: MediaLinks, index: number) => {
-    const nextVideoIndex = links.findIndex(item => item.id == currentVideo.id);
-    const nextVideoToPlay = links[nextVideoIndex + index];
-    if (nextVideoToPlay) {
-      setCurrentVideo(nextVideoToPlay);
-    }
-  };
 
   const setLocalStorageOptions = (which: string, value: any) => {
     const options = {
@@ -134,6 +117,7 @@ export const LinksProvider: React.FC = ({ children }) => {
   }, [currentVideo]);
 
   const value = useMemo(() => ({
+    localStorageOptions,
     loading,
     links,
     reload,
@@ -141,27 +125,21 @@ export const LinksProvider: React.FC = ({ children }) => {
     sort,
     downloadState,
     currentVideo,
-    playing,
-    autoplay,
     setLinks,
     setReload,
     setFilters,
     setSort,
     setDownloadState,
     setCurrentVideo,
-    setPlaying,
-    playVideoByCurrent,
-    setAutoplay,
     setLocalStorageOptions
   }), [
+    localStorageOptions,
     loading,
     reload,
     filters,
     sort,
     downloadState,
     currentVideo,
-    playing,
-    autoplay,
     links
   ]);
 

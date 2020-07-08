@@ -1,12 +1,10 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { Input, Button, Select, Message } from "semantic-ui-react";
+import { Input, Button, Select } from "semantic-ui-react";
 import { Form, Field } from "react-final-form";
 import { LinksContext } from "../../contexts/LinksContext";
 import { createMediaLink } from "../../lib/media-links";
 import { UserContext } from "../../contexts/UserContext";
-import YouTubeIcon from "../../icons/youtube.svg";
-import SoundCloudIcon from "../../icons/soundcloud.svg";
 
 const Container = styled.div`
   font-size: 12px;
@@ -81,16 +79,10 @@ const FormInput = styled.input`
   }
 `;
 
-enum ResponseMessageType {
-  Success = "success",
-  Error = "error",
-};
-
 type CreateLinkProps = {};
 
 export const CreateLink: React.FC<CreateLinkProps> = () => {
   const { setLinks, links } = useContext(LinksContext);
-  // const [message, setMessage] = useState<Partial<{ type: string; text: string; active: boolean }>>({ type: "", text: "", active: false });
   const [loading, setLoading] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
   const required = (value: any) => value ? undefined : "Please enter a YouTube link.";
@@ -100,17 +92,8 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
     setType(value);
   };
 
-  // const handleDismiss = () => setMessage({ active: false });
-
   return (
     <Container>
-      <SupportedFormatWrapper>
-        <p>Supported Formats: </p>
-        <div>
-          <img src={YouTubeIcon} alt="YouTube Logo" style={{ width: "20px" }} />
-          <img src={SoundCloudIcon} alt="SoundCloud Logo" style={{ width: "20px" }} />
-        </div>
-      </SupportedFormatWrapper>
       <Form
         onSubmit={async (fields: { link: string }) => {
           setLoading(true);
@@ -122,10 +105,8 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
             });
             links.splice(0, 0, data.data);
             setLinks([...links]);
-            // setMessage({ type: "success", text: "Successfully added link.", active: true });
           } catch (e) {
             alert(e);
-            // setMessage({ type: "error", text: "Error creating link.", active: true });
           } finally {
             setLoading(false);
           }
@@ -166,16 +147,6 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                 Add
               </Button>
             </Input>
-            {/* {message.active && (
-              <Message
-                success={message.type == ResponseMessageType.Success}
-                error={message.type == ResponseMessageType.Error}
-                style={{ marginTop: "10px" }}
-                onDismiss={handleDismiss}
-              >
-                {message.text}
-              </Message>
-            )} */}
           </FormContainer>
         )}
       />

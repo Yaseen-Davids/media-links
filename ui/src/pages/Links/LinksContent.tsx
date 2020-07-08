@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { MediaLinks } from "../../models/media-links";
 import { Card } from "../../components/Card";
@@ -9,6 +9,9 @@ import { LinksContext } from "../../contexts/LinksContext";
 import { Loading } from "../../components/Loading";
 import { VideoPlayer } from "./VideoPlayer";
 import { UserContext } from "../../contexts/UserContext";
+import { ControlActions } from "./ControlActions";
+import { MediaPlayerProvider, MediaPlayerContext } from "../../contexts/MediaPlayerContext";
+import { ProgressBar } from "../../components/ProgressBar";
 
 type LinksContentProps = {};
 
@@ -18,10 +21,12 @@ const Container = styled.div`
   display: grid;
   grid-template-areas: 
   "header header header"
-  ". content playlist"
+  "content content playlist"
+  "control control control"
   ;
-  grid-template-columns: 200px 1fr 40%;
-  grid-template-rows: min-content 1fr;
+  grid-template-columns: 1fr 1fr 40%;
+  grid-template-rows: min-content 1fr min-content;
+  grid-row-gap: 20px;
   @media (max-width: 850px) and (min-width: 1px) {
     grid-template-areas: 
     "header"
@@ -49,16 +54,14 @@ const Content = styled.div`
   display: grid;
   grid-template-rows: 1fr;
   overflow-y: hidden;
-  margin-bottom: 10px;
 `;
 
 const VideoPlayerContent = styled.div`
-  position: relative;
-  height: 100%;
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  overflow: hidden;
   grid-area: playlist;
-  @media (max-width: 850px) and (min-width: 1px) {
-    margin-bottom: 10px;
-  };
+  padding-right: 10px;
 `;
 
 const AppNameHeader = styled.div`
@@ -80,23 +83,6 @@ const HeaderActionsWrapper = styled.div`
   display: grid;
   grid-template-rows: min-content min-content;
   grid-gap: 10px;
-  padding-top: 10px;
-`;
-
-const HeaderPlaylistWrapper = styled.div`
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  h4 {
-    font-size: 20px;
-    color: #b4b4b4;
-  }
-  @media (max-width: 850px) and (min-width: 1px) {
-    padding: 0px;
-    h4 {
-      font-size: 11px;
-    }
-  }
 `;
 
 const CardsWrapper = styled.div`
@@ -110,8 +96,13 @@ const CardsWrapper = styled.div`
   }
 `;
 
+const Controls = styled.div`
+  grid-area: control;
+  background: #1f1f1f;
+`;
+
 export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
-  const { currentVideo, loading, links } = useContext(LinksContext);
+  const { loading, links } = useContext(LinksContext);
   const { loading: userLoading } = useContext(UserContext);
   const [dataLoading, setDataLoading] = useState(true);
 
@@ -124,36 +115,42 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
   }, [loading, userLoading, dataLoading]);
 
   return (
-    <Container>
-      <Header>
-        <AppNameHeader>
-          <h3>
-            <strong>Media</strong>Links
+    <MediaPlayerProvider>
+      <Container>
+        <Header>
+          <AppNameHeader>
+            <h3>
+              <strong>Media</strong>Links
             <Icon name="list" />
-          </h3>
-        </AppNameHeader>
-        <HeaderActionsWrapper>
-          <CreateLink />
-          <Filters />
-        </HeaderActionsWrapper>z
-      </Header>
-      <Content>
-        {dataLoading ? (
-          <Loading />
-        ) : (
-            <CardsWrapper>
-              {links.length > 0 ? (
-                links.map((link: MediaLinks, index: number) => (
-                  <Card key={index} link={link} />
-                )))
-                : <p style={{ color: "#fafafa" }}>No links found.</p>
-              }
-            </CardsWrapper>
-          )}
-      </Content>
-      <VideoPlayerContent>
-        <VideoPlayer />
-      </VideoPlayerContent>
-    </Container>
+            </h3>
+          </AppNameHeader>
+        </Header>
+        <Content>
+          <VideoPlayer />
+        </Content>
+        <VideoPlayerContent>
+          <HeaderActionsWrapper>
+            <CreateLink />
+            <Filters />
+          </HeaderActionsWrapper>
+          {dataLoading ? (
+            <Loading />
+          ) : (
+              <CardsWrapper>
+                {links.length > 0 ? (
+                  links.map((link: MediaLinks, index: number) => (
+                    <Card key={index} link={link} />
+                  )))
+                  : <p style={{ color: "#fafafa" }}>No links found.</p>
+                }
+              </CardsWrapper>
+            )}
+        </VideoPlayerContent>
+        <Controls>
+          <ProgressBar />
+          <ControlActions />
+        </Controls>
+      </Container>
+    </MediaPlayerProvider>
   )
 }

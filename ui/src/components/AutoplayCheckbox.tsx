@@ -2,9 +2,13 @@ import React, { useContext } from "react";
 import { LinksContext } from "../contexts/LinksContext";
 import { Checkbox } from "semantic-ui-react";
 import styled from "styled-components";
+import { MediaPlayerContext } from "../contexts/MediaPlayerContext";
 
-export const AutoplayCheckbox = () => {
-  const { autoplay, setAutoplay, setLocalStorageOptions } = useContext(LinksContext);
+type VideoPlayButtonsProps = {};
+
+export const AutoplayCheckbox: React.FC<VideoPlayButtonsProps> = ({ }) => {
+  const { setLocalStorageOptions } = useContext(LinksContext);
+  const { autoplay, setAutoplay } = useContext(MediaPlayerContext);
 
   const handleAutoplay = (value: boolean) => {
     try {
