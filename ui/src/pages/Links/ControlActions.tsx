@@ -8,6 +8,7 @@ import Slider from "rc-slider";
 import addSeconds from "date-fns/addSeconds";
 import format from "date-fns/format";
 import { LinksContext } from "../../contexts/LinksContext";
+import BigNumber from "bignumber.js";
 
 type ControlActionsProps = {};
 
@@ -25,7 +26,7 @@ export const ControlActions: React.FC<ControlActionsProps> = ({ }) => {
 
   const playedTime = useMemo(() => {
     if (duration != 0) {
-      const helperDate = addSeconds(new Date(0), progress);
+      const helperDate = addSeconds(new Date(0), new BigNumber(progress).decimalPlaces(0).toNumber());
       return format(helperDate, "mm:ss");
     }
     return "00:00";
