@@ -21,11 +21,14 @@
     "ejs": "^3.1.2",
     "express": "~4.16.1",
     "express-session": "^1.17.1",
-    "knex": "^0.20.13",
+    "ffmpeg": "0.0.4",
+    "knex": "^0.21.1",
     "morgan": "~1.9.1",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
-    "pg": "^7.18.2",
-    "redis": "^3.0.2"
+    "pg": "^8.0.3",
+    "redis": "^3.0.2",
+    "youtube-dl": "^3.0.2",
+    "ytdl-core": "^3.1.2"
   }
 }

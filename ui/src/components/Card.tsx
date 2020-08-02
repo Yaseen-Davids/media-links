@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import { Button } from "semantic-ui-react";
 import { MediaLinks } from "../models/media-links";
-import { deleteMediaLink } from "../lib/media-links";
+import { deleteMediaLink, downloadByURL } from "../lib/media-links";
 import { LinksContext } from "../contexts/LinksContext";
 
 const CardContainer = styled.div`
@@ -66,6 +66,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
   const { setCurrentVideo, setPlaying, links, setLinks, currentVideo } = useContext(LinksContext);
   const [deleteLink, setDeleteLink] = useState<boolean>(false);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+  const [downloading, setDownloading] = useState<boolean>(false);
 
   const handleDeleteLink = async (id: number) => {
     setDeleteLoading(true);
@@ -80,6 +81,17 @@ export const Card: React.FC<CardProps> = ({ link }) => {
   const handlePlayVideo = () => {
     setPlaying(true);
     setCurrentVideo(link);
+  }
+
+  const handleDownload = async (url: string, type: string) => {
+    setDownloading(true);
+    try {
+      await downloadByURL(url, type);
+      setDownloading(false);
+    } catch (error) {
+      setDownloading(false);
+      console.log("download error", error);
+    }
   }
 
   return (
@@ -115,16 +127,29 @@ export const Card: React.FC<CardProps> = ({ link }) => {
               />
             </>
           ) : (
-              <Button
-                basic
-                circular
-                size="small"
-                color="grey"
-                icon="trash"
-                title="Delete"
-                style={{ background: "#bf360c" }}
-                onClick={() => setDeleteLink(true)}
-              />
+              <>
+                <Button
+                  basic
+                  circular
+                  size="small"
+                  color="grey"
+                  icon="cloud download"
+                  title="Download"
+                  style={{ background: "#bf360c" }}
+                  loading={downloading}
+                  onClick={() => handleDownload(link.author_url, link.type)}
+                />
+                <Button
+                  basic
+                  circular
+                  size="small"
+                  color="grey"
+                  icon="trash"
+                  title="Delete"
+                  style={{ background: "#bf360c" }}
+                  onClick={() => setDeleteLink(true)}
+                />
+              </>
             )}
         </CardButtons>
       </CardTitleWrapper>

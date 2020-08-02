@@ -1,12 +1,7 @@
 import axios from "axios";
 import { MediaLinks } from "../models/media-links";
 
-export const getAllMediaLinks = async (obj: {
-  filters: string[];
-  sort: { column: string; order: string };
-  downloadState: { downloaded: number };
-  userId: number;
-}): Promise<MediaLinks[]> => {
+export const getAllMediaLinks = async (obj: { filters: string[]; sort: { column: string; order: string }; downloadState: { downloaded: number }; userId: number }): Promise<MediaLinks[]> => {
   try {
     const resp = await axios.post("/youtube/all", obj);
 
@@ -26,8 +21,7 @@ type Link = {
   userId: number;
 };
 
-export const createMediaLink = async (body: Link) =>
-  await axios.post("/youtube/create", body);
+export const createMediaLink = async (body: Link) => await axios.post("/youtube/create", body);
 
 export const deleteMediaLink = async (id: number) => {
   try {
@@ -40,5 +34,23 @@ export const deleteMediaLink = async (id: number) => {
     return { message: "Successfully deleted YouTube link." };
   } catch (error) {
     return error;
+  }
+};
+
+export const downloadByURL = async (url: string, type: string) => {
+  try {
+    const response = await axios.post(`/download/song`, { url }, { responseType: "arraybuffer" });
+
+    const filename = response.headers.filename;
+    const blob = new Blob([response.data]);
+    const link = document.createElement("a");
+    const href = window.URL.createObjectURL(blob);
+
+    link.href = href;
+    link.download = `${filename}.mp3`;
+
+    link.click();
+  } catch (error) {
+    throw error;
   }
 };

@@ -21,6 +21,7 @@ const passport = require("passport");
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 const youtubeRouter = require("./routes/media-links");
+const downloadRouter = require("./routes/download");
 
 const app = express();
 
@@ -61,6 +62,7 @@ app.use(cookieParser("secret"));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/youtube", youtubeRouter);
+app.use("/download", downloadRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));
@@ -73,6 +75,7 @@ app.use(function (err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
+  console.log(err);
   res.render("error");
 });
 
