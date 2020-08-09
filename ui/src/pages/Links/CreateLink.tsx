@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { Input, Button, Select } from "semantic-ui-react";
+import { Input, Button, Select, Icon } from "semantic-ui-react";
 import { Form, Field } from "react-final-form";
 import { LinksContext } from "../../contexts/LinksContext";
 import { createMediaLink } from "../../lib/media-links";
@@ -50,27 +50,6 @@ const FormContainer = styled.form`
   }
 `;
 
-const SupportedFormatWrapper = styled.div`
-  display: grid;
-  grid-template-columns: max-content max-content;
-  grid-gap: 10px;
-  padding-top: 5px;
-  p {
-    padding-left: 5px;
-    color: #d4d4d4;
-  }
-  div {
-    display: grid;
-    grid-template-columns: min-content min-content;
-    grid-gap: 5px;
-  }
-  @media (max-width: 850px) and (min-width: 1px) {
-    p {
-      padding-left: 0px;
-    }
-  }
-`;
-
 const FormInput = styled.input`
   &&&&& {
     display: block;
@@ -82,7 +61,7 @@ const FormInput = styled.input`
 type CreateLinkProps = {};
 
 export const CreateLink: React.FC<CreateLinkProps> = () => {
-  const { setLinks, links } = useContext(LinksContext);
+  const { setLinks, links, toggleFilters, showFilters } = useContext(LinksContext);
   const [loading, setLoading] = useState<boolean>(false);
   const [type, setType] = useState<string>("");
   const required = (value: any) => value ? undefined : "Please enter a YouTube link.";
@@ -145,6 +124,15 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                 loading={loading}
               >
                 Add
+              </Button>
+              <Button
+                basic
+                type="reset"
+                color="grey"
+                size="small"
+                onClick={() => toggleFilters(!showFilters)}
+              >
+                <Icon name="filter" />
               </Button>
             </Input>
           </FormContainer>

@@ -1,6 +1,6 @@
-import React, { FC, useContext } from "react";
+import React, { FC, useContext, useState } from "react";
 import styled from "styled-components";
-import { Dropdown } from "semantic-ui-react";
+import { Dropdown, Button, Icon } from "semantic-ui-react";
 import { LinksContext } from "../../contexts/LinksContext";
 
 const Container = styled.div`
@@ -52,7 +52,7 @@ const DropdownSelect = styled(Dropdown)`
 type FiltersProps = {};
 
 export const Filters: FC<FiltersProps> = () => {
-  const { filters, setFilters, sort, setSort, downloadState, setDownloadState, setLocalStorageOptions } = useContext(LinksContext);
+  const { filters, setFilters, sort, setSort, downloadState, setDownloadState, setLocalStorageOptions, showFilters } = useContext(LinksContext);
 
   const filterOptions = [
     { key: 1, text: "Songs", value: "song" },
@@ -103,34 +103,38 @@ export const Filters: FC<FiltersProps> = () => {
 
   return (
     <Container>
-      <DropdownSelect
-        fluid
-        multiple
-        selection
-        closeOnChange
-        value={filters}
-        options={filterOptions}
-        placeholder="Filters"
-        onChange={(_: any, event: any) => handleFilterChange(event.value)}
-      />
-      <DropdownSelect
-        fluid
-        selection
-        value={sort}
-        closeOnChange
-        placeholder="Sort"
-        options={sortOptions}
-        onChange={(_: any, event: any) => handleSortChange(event.value)}
-      />
-      <DropdownSelect
-        fluid
-        selection
-        value={downloadState}
-        closeOnChange
-        placeholder="State"
-        options={stateOptions}
-        onChange={(_: any, event: any) => handleStateChange(event.value)}
-      />
+      {showFilters && (
+        <>
+          <DropdownSelect
+            fluid
+            multiple
+            selection
+            closeOnChange
+            value={filters}
+            options={filterOptions}
+            placeholder="Filters"
+            onChange={(_: any, event: any) => handleFilterChange(event.value)}
+          />
+          <DropdownSelect
+            fluid
+            selection
+            value={sort}
+            closeOnChange
+            placeholder="Sort"
+            options={sortOptions}
+            onChange={(_: any, event: any) => handleSortChange(event.value)}
+          />
+          <DropdownSelect
+            fluid
+            selection
+            value={downloadState}
+            closeOnChange
+            placeholder="State"
+            options={stateOptions}
+            onChange={(_: any, event: any) => handleStateChange(event.value)}
+          />
+        </>
+      )}
     </Container>
   )
 }

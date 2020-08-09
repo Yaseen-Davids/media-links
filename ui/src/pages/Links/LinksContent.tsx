@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { MediaLinks } from "../../models/media-links";
 import { Card } from "../../components/Card";
 import { CreateLink } from "./CreateLink";
-import { Icon } from "semantic-ui-react";
 import { Filters } from "./Filters";
 import { LinksContext } from "../../contexts/LinksContext";
 import { Loading } from "../../components/Loading";
@@ -38,17 +37,6 @@ const Container = styled.div`
   }
 `;
 
-const Header = styled.div`
-  grid-area: header;
-  display: grid;
-  grid-template-columns: 200px 1fr 40%;
-  @media (max-width: 850px) and (min-width: 1px) {
-    padding: 10px;
-    grid-template-columns: 1fr;
-    grid-template-row: min-content 1fr 1fr;
-  }
-`;
-
 const Content = styled.div`
   grid-area: content;
   display: grid;
@@ -62,21 +50,6 @@ const VideoPlayerContent = styled.div`
   overflow: hidden;
   grid-area: playlist;
   padding-right: 10px;
-`;
-
-const AppNameHeader = styled.div`
-  color: #fafafa;
-  h3 {
-    padding: 10px;
-    margin: 0;
-    i {
-      margin-left: 5px;
-      font-size: 13px;
-    }
-    @media (max-width: 850px) and (min-width: 1px) {
-      padding: 0px;
-    }
-  }
 `;
 
 const HeaderActionsWrapper = styled.div`
@@ -117,14 +90,6 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
   return (
     <MediaPlayerProvider>
       <Container>
-        <Header>
-          <AppNameHeader>
-            <h3>
-              <strong>Media</strong>Links
-            <Icon name="list" />
-            </h3>
-          </AppNameHeader>
-        </Header>
         <Content>
           <VideoPlayer />
         </Content>

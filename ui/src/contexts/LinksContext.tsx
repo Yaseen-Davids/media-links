@@ -26,6 +26,7 @@ export type LinksContextState = {
   downloadState: string;
   currentVideo: MediaLinks;
   localStorageOptions: LocalStorageOptions;
+  showFilters: boolean;
   setLinks(links: MediaLinks[]): void;
   setReload(reload: boolean): void;
   setFilters(filters: FilterOptions): void;
@@ -33,6 +34,7 @@ export type LinksContextState = {
   setDownloadState(downloadState: string): void;
   setCurrentVideo(currentVideo: MediaLinks): void;
   setLocalStorageOptions(which: string, value: any): void;
+  toggleFilters(showFilters: boolean): void;
 };
 
 export const LinksContext = createContext<LinksContextState>({
@@ -44,6 +46,7 @@ export const LinksContext = createContext<LinksContextState>({
   downloadState: "active",
   currentVideo: defaultCurrentVideo,
   localStorageOptions: JSON.parse(defaultLocalStorage).options,
+  showFilters: false,
   setLinks: () => { },
   setReload: () => { },
   setFilters: () => { },
@@ -51,6 +54,7 @@ export const LinksContext = createContext<LinksContextState>({
   setDownloadState: () => { },
   setCurrentVideo: () => { },
   setLocalStorageOptions: () => { },
+  toggleFilters: () => { },
 });
 
 export const LinksProvider: React.FC = ({ children }) => {
@@ -63,6 +67,7 @@ export const LinksProvider: React.FC = ({ children }) => {
   const [downloadState, setDownloadState] = useState<string>(localStorageOptions.downloadState);
   const [currentVideo, setCurrentVideo] = useState<MediaLinks>(defaultCurrentVideo);
   const { user } = useContext(UserContext);
+  const [showFilters, toggleFilters] = useState<boolean>(false);
 
   const setLocalStorageOptions = (which: string, value: any) => {
     const options = {
@@ -125,13 +130,15 @@ export const LinksProvider: React.FC = ({ children }) => {
     sort,
     downloadState,
     currentVideo,
+    showFilters,
     setLinks,
     setReload,
     setFilters,
     setSort,
     setDownloadState,
     setCurrentVideo,
-    setLocalStorageOptions
+    setLocalStorageOptions,
+    toggleFilters,
   }), [
     localStorageOptions,
     loading,
@@ -140,7 +147,8 @@ export const LinksProvider: React.FC = ({ children }) => {
     sort,
     downloadState,
     currentVideo,
-    links
+    links,
+    showFilters
   ]);
 
   return (
