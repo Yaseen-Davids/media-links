@@ -8,6 +8,7 @@ import Slider from "rc-slider";
 import addSeconds from "date-fns/addSeconds";
 import format from "date-fns/format";
 import { LinksContext } from "../../contexts/LinksContext";
+import { MediaPlaying } from "../../components/MediaPlaying";
 
 type ControlActionsProps = {};
 
@@ -64,7 +65,7 @@ export const ControlActions: React.FC<ControlActionsProps> = ({ }) => {
           </ActionWrapper>
         </VideoPlayActions>
       </VideoPlayActionsWrapper>
-      <Control />
+      <MediaPlaying />
       <MediaPlayerOptions>
         <div></div>
         <AutoplayCheckbox />
@@ -141,12 +142,6 @@ const Container = styled.div`
   padding-right: 10px;
 `;
 
-const Control = styled.div`
-  /* border: 1px solid #cecece; */
-  display: flex;
-  padding: 8px;
-`;
-
 const MediaPlayerOptions = styled.div`
   display: grid;
   grid-template-columns: 1fr min-content;
@@ -157,7 +152,6 @@ const VideoPlayActionsWrapper = styled.div`
   grid-template-columns: 1fr;
   grid-gap: 10px;
   padding: 8px;
-  /* border: 1px solid #cecece; */
   `;
 
 const VideoPlayActions = styled.div`
