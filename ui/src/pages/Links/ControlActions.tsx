@@ -9,6 +9,7 @@ import addSeconds from "date-fns/addSeconds";
 import format from "date-fns/format";
 import { LinksContext } from "../../contexts/LinksContext";
 import { MediaPlaying } from "../../components/MediaPlaying";
+import { Loop } from "../../components/Loop";
 
 type ControlActionsProps = {};
 
@@ -67,7 +68,8 @@ export const ControlActions: React.FC<ControlActionsProps> = ({ }) => {
       </VideoPlayActionsWrapper>
       <MediaPlaying />
       <MediaPlayerOptions>
-        <div></div>
+        <div />
+        <Loop />
         <AutoplayCheckbox />
       </MediaPlayerOptions>
     </Container>
@@ -144,7 +146,7 @@ const Container = styled.div`
 
 const MediaPlayerOptions = styled.div`
   display: grid;
-  grid-template-columns: 1fr min-content;
+  grid-template-columns: 1fr min-content min-content;
 `;
 
 const VideoPlayActionsWrapper = styled.div`

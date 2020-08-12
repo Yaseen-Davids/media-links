@@ -11,6 +11,7 @@ export type MediaPlayerState = {
   volume: number;
   duration: number;
   seek: number | null;
+  loop: boolean;
   setPlaying(playing: boolean): void;
   playVideoByCurrent(currentVideo: MediaLinks, index: number): void;
   setAutoplay(autoplay: boolean): void;
@@ -19,6 +20,7 @@ export type MediaPlayerState = {
   setVolume(volume: number): void;
   setDuration(duration: number): void;
   seekTo(seek: number): void;
+  setLoop(loop: boolean): void;
 };
 
 export const MediaPlayerContext = createContext<MediaPlayerState>({
@@ -29,6 +31,7 @@ export const MediaPlayerContext = createContext<MediaPlayerState>({
   volume: 0,
   duration: 0,
   seek: null,
+  loop: false,
   setPlaying: () => { },
   playVideoByCurrent: () => { },
   setAutoplay: () => { },
@@ -36,7 +39,8 @@ export const MediaPlayerContext = createContext<MediaPlayerState>({
   setProgress: () => { },
   setVolume: () => { },
   setDuration: () => { },
-  seekTo: () => { }
+  seekTo: () => { },
+  setLoop: () => { },
 });
 
 export const MediaPlayerProvider: React.FC = ({ children }) => {
@@ -48,6 +52,7 @@ export const MediaPlayerProvider: React.FC = ({ children }) => {
   const [volume, setVolume] = useState<number>(localStorageOptions.volume);
   const [duration, setDuration] = useState<number>(0);
   const [seek, seekTo] = useState<number | null>(null);
+  const [loop, setLoop] = useState<boolean>(false);
 
   const playVideoByCurrent = async (currentVideo: MediaLinks, index: number) => {
     const nextVideoIndex = links.findIndex(item => item.id == currentVideo.id);
@@ -68,6 +73,7 @@ export const MediaPlayerProvider: React.FC = ({ children }) => {
     volume,
     duration,
     seek,
+    loop,
     setCurrentVideo,
     setPlaying,
     playVideoByCurrent,
@@ -77,6 +83,7 @@ export const MediaPlayerProvider: React.FC = ({ children }) => {
     setVolume,
     setDuration,
     seekTo,
+    setLoop,
   }), [
     loading,
     currentVideo,
@@ -85,7 +92,8 @@ export const MediaPlayerProvider: React.FC = ({ children }) => {
     progress,
     volume,
     duration,
-    seek
+    seek,
+    loop
   ]);
 
   return (
