@@ -9,7 +9,7 @@ import { Loading } from "../../components/Loading";
 import { VideoPlayer } from "./VideoPlayer";
 import { UserContext } from "../../contexts/UserContext";
 import { ControlActions } from "./ControlActions";
-import { MediaPlayerProvider, MediaPlayerContext } from "../../contexts/MediaPlayerContext";
+import { MediaPlayerProvider } from "../../contexts/MediaPlayerContext";
 import { ProgressBar } from "../../components/ProgressBar";
 
 type LinksContentProps = {};
@@ -30,10 +30,12 @@ const Container = styled.div`
     grid-template-areas: 
     "header"
     "playlist"
-    "content"
+    "control"
     ;
     grid-template-columns: 1fr;
-    grid-template-rows: min-content min-content 1fr;
+    grid-template-rows: min-content 1fr min-content;
+    grid-row-gap: 5px;
+    overflow: hidden;
   }
 `;
 
@@ -42,6 +44,9 @@ const Content = styled.div`
   display: grid;
   grid-template-rows: 1fr;
   overflow-y: hidden;
+  @media (max-width: 850px) and (min-width: 1px) {
+    display: none;
+  }
 `;
 
 const VideoPlayerContent = styled.div`
@@ -50,6 +55,10 @@ const VideoPlayerContent = styled.div`
   overflow: hidden;
   grid-area: playlist;
   padding-right: 10px;
+  @media (max-width: 850px) and (min-width: 1px) {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
 `;
 
 const HeaderActionsWrapper = styled.div`
@@ -62,10 +71,6 @@ const CardsWrapper = styled.div`
   overflow-y: auto;
   div:last-child {
     margin-bottom: 0px;
-  }
-  @media (max-width: 850px) and (min-width: 1px) {
-    padding-left: 10px;
-    padding-right: 10px;
   }
 `;
 

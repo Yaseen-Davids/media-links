@@ -1,12 +1,13 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from "react";
+import { LinksContent } from "./pages/Links/LinksContent";
+import { LinksProvider } from "./contexts/LinksContext";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Login } from "./pages/Login";
+import { UserContext, UserProvider } from "./contexts/UserContext";
+import { LoginGuard } from "./pages/Login/LoginGuard";
+import { Loading } from "./models/base";
 import styled from "styled-components";
-import { LinksContent } from './pages/Links/LinksContent';
-import { LinksProvider } from './contexts/LinksContext';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { Login } from './pages/Login';
-import { UserContext, UserProvider } from './contexts/UserContext';
-import { LoginGuard } from './pages/Login/LoginGuard';
-import { Loading } from './models/base';
+import SnackbarProvider from "react-simple-snackbar";
 
 const shouldLoad = (loading: Loading) => {
   return !loading.loading && !loading.loaded && !loading.error;
@@ -22,36 +23,45 @@ export const HydrateUser = () => {
   return null;
 };
 
-const App: FC = () => (
-  <Router>
-    <Route component={LoginGuard} />
-    <UserProvider>
-      <Route component={HydrateUser} />
-      <Route
-        render={() => (
-          <Switch>
-            <Route path="/login" component={Login} />
-            <Route path="/">
-              <LinksProvider>
-                <Container>
-                  <LinksContent />
-                </Container>
-              </LinksProvider>
-            </Route>
-          </Switch>
-        )}
-      />
-    </UserProvider>
-  </Router>
-);
+const App: FC = () => {
+
+  useEffect(() => {
+    // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+    let vh = window.innerHeight * 0.01;
+    // Then we set the value in the --vh custom property to the root of the document
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  }, []);
+
+  return (
+    <Router>
+      <Route component={LoginGuard} />
+      <UserProvider>
+        <Route component={HydrateUser} />
+        <Route
+          render={() => (
+            <Switch>
+              <Route path="/login" component={Login} />
+              <Route path="/">
+                <SnackbarProvider>
+                  <LinksProvider>
+                    <Container className="main-container">
+                      <LinksContent />
+                    </Container>
+                  </LinksProvider>
+                </SnackbarProvider>
+              </Route>
+            </Switch>
+          )}
+        />
+      </UserProvider>
+    </Router>
+  )
+};
 
 const Container = styled.div`
-  max-height: 100vh;
-  height: 100vh;
   background-color: #121212;
-@media (max-width: 850px) and (min-width: 1px) {
-    height: 100%;
-    max-height: 100%;
+  @media (max-width: 850px) and (min-width: 1px) {
+    overflow: hidden;
   }
 `;
 

@@ -1,6 +1,6 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
-import { Button } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 import { MediaLinks } from "../models/media-links";
 import { deleteMediaLink } from "../lib/media-links";
 import { LinksContext } from "../contexts/LinksContext";
@@ -69,6 +69,38 @@ const CardButtons = styled.div`
   }
 `;
 
+const DropdownSelect = styled(Dropdown)`
+  &&&&&& {
+    color: #cecece;
+    font-size: 12px;
+    .ellipsis.vertical.icon {
+      color: #333;
+      font-size: 20px;
+    }
+    div.text {
+      color: #cecece;
+    }
+    a {
+      background-color: #2a2a2a;
+      color: #cecece;
+    }
+    .menu.transition {
+      background-color: #1f1f1f;
+      border: 1px solid #333;
+      div {
+        border-top: 1px solid #333;
+        font-size: 12px;
+      }
+      span {
+        color: #cecece;
+      }
+      i {
+        color: #cecece;
+      }
+    }
+  }
+`;
+
 type CardProps = {
   link: MediaLinks;
 };
@@ -76,17 +108,12 @@ type CardProps = {
 export const Card: React.FC<CardProps> = ({ link }) => {
   const { setCurrentVideo, links, setLinks, currentVideo } = useContext(LinksContext);
   const { setDuration, setProgress, setPlaying } = useContext(MediaPlayerContext);
-  const [deleteLink, setDeleteLink] = useState<boolean>(false);
-  const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
 
   const handleDeleteLink = async (id: number) => {
-    setDeleteLoading(true);
     await deleteMediaLink(id);
     const linkIndex = links.findIndex(link => link.id === id);
     links.splice(linkIndex, 1);
     setLinks([...links]);
-    setDeleteLoading(false);
-    setDeleteLink(false);
   };
 
   const handlePlayVideo = () => {
@@ -104,54 +131,15 @@ export const Card: React.FC<CardProps> = ({ link }) => {
           <p>{link.title}</p>
         </CardTitle>
         <CardButtons>
-          {deleteLink ? (
-            <>
-              <Button
-                basic
-                circular
-                size="small"
-                icon="close"
-                color="grey"
-                title="Cancel"
-                disabled={deleteLoading}
-                style={{ background: "#bf360c" }}
-                onClick={() => setDeleteLink(false)}
-              />
-              <Button
-                basic
-                circular
-                size="small"
-                icon="check"
-                color="grey"
-                title="Confirm"
-                loading={deleteLoading}
-                onClick={() => handleDeleteLink(link.id)}
-              />
-            </>
-          ) : (
-              <>
-                <Button
-                  basic
-                  circular
-                  size="small"
-                  color="grey"
-                  icon="copy"
-                  title="Copy Link"
-                  style={{ background: "#bf360c" }}
-                  onClick={() => navigator.clipboard.writeText(link.author_url)}
-                />
-                <Button
-                  basic
-                  circular
-                  size="small"
-                  color="grey"
-                  icon="trash"
-                  title="Delete"
-                  style={{ background: "#bf360c" }}
-                  onClick={() => setDeleteLink(true)}
-                />
-              </>
-            )}
+          <DropdownSelect
+            icon="ellipsis vertical"
+            direction="left"
+          >
+            <Dropdown.Menu>
+              <Dropdown.Item icon="copy" text="Copy link" onClick={() => navigator.clipboard.writeText(link.author_url)} />
+              <Dropdown.Item icon="trash" text="Delete" onClick={() => handleDeleteLink(link.id)} />
+            </Dropdown.Menu>
+          </DropdownSelect>
         </CardButtons>
       </CardTitleWrapper>
     </CardContainer >

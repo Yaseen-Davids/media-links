@@ -1,59 +1,48 @@
 import React, { useContext } from "react";
-import { Checkbox } from "semantic-ui-react";
+import { Icon } from "semantic-ui-react";
 import styled from "styled-components";
 import { MediaPlayerContext } from "../contexts/MediaPlayerContext";
+import { useSnackbar } from "react-simple-snackbar";
 
 export const Loop = () => {
   const { loop, setLoop } = useContext(MediaPlayerContext);
+  const [openSnackbar] = useSnackbar();
+
+  const handleLoopStateChange = () => {
+    openSnackbar(`Loop turned ${loop ? "off" : "on"}`);
+    setLoop(!loop);
+  }
 
   return (
     <LoopCheckboxWrapper>
-      <p>Loop</p>
-      <Checkbox toggle checked={loop} onChange={() => setLoop(!loop)} />
+      <LoopIcon name="retweet" active={loop ? "#d4d4d4" : "grey"} onClick={handleLoopStateChange} />
     </LoopCheckboxWrapper>
   )
 }
 
 const LoopCheckboxWrapper = styled.div`
-  display: flex;
-  color: #9f9f9f;
-  align-items: center;
-  flex-direction: row;
-  width: 130px;
-  justify-content: space-between;
-  min-height: 31px;
-  p {
-    margin: 0 auto;
-    @media (max-width: 850px) and (min-width: 1px) {
-      font-size: 11px;
-    }
-  }
-  &&&&&& div {
-    @media (max-width: 850px) and (min-width: 1px) {
-      min-height: 1rem;
-    }
-  }
   &&&&&& {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    width: 50px;
+    justify-content: space-between;
+    min-height: 31px;
     @media (max-width: 850px) and (min-width: 1px) {
-      min-height: 1rem;
-      label {
-        min-height: 1rem;
-        height: 1rem;
-        width: 3rem;
-      }
-      label::before {
-        min-height: 1rem;
-        height: 1rem;
-        width: 3rem;
-      }
-      label::after {
-        min-height: 1rem;
-        height: 1rem;
-        width: 1rem;
-      }
+      width: 40px;
     }
-    label::before {
-      background-color: #666;
+  }
+`;
+
+const LoopIcon = styled(Icon)`
+  &&&& {
+    margin: 0 auto;
+    cursor: pointer;
+    font-size: 22px;
+    color: ${(props: { active: string }) => props.active};
+    margin-top: -2px;
+    @media (max-width: 850px) and (min-width: 1px) {
+      font-size: 16px;
     }
   }
 `;

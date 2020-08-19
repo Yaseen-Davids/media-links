@@ -26,6 +26,9 @@ const Container = styled.div`
   grid-template-areas: ". playing .";
   grid-template-columns: 10% 1fr 10%;
   text-align: center;
+  @media (max-width: 850px) and (min-width: 1px) {
+    display: none;
+  };
 `;
 
 const CardTitleWrapper = styled.div`
@@ -49,8 +52,8 @@ const CardTitle = styled.div`
     width: 90px;
   }
   p {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
   }
   @media (max-width: 850px) and (min-width: 1px) {
     font-size: 11px;

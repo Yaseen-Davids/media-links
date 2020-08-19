@@ -102,39 +102,41 @@ export const Filters: FC<FiltersProps> = () => {
   };
 
   return (
-    <Container>
+    <>
       {showFilters && (
-        <>
-          <DropdownSelect
-            fluid
-            multiple
-            selection
-            closeOnChange
-            value={filters}
-            options={filterOptions}
-            placeholder="Filters"
-            onChange={(_: any, event: any) => handleFilterChange(event.value)}
-          />
-          <DropdownSelect
-            fluid
-            selection
-            value={sort}
-            closeOnChange
-            placeholder="Sort"
-            options={sortOptions}
-            onChange={(_: any, event: any) => handleSortChange(event.value)}
-          />
-          <DropdownSelect
-            fluid
-            selection
-            value={downloadState}
-            closeOnChange
-            placeholder="State"
-            options={stateOptions}
-            onChange={(_: any, event: any) => handleStateChange(event.value)}
-          />
-        </>
+        <Container>
+          <>
+            <DropdownSelect
+              fluid
+              multiple
+              selection
+              closeOnChange
+              value={filters}
+              options={filterOptions}
+              placeholder="Filters"
+              onChange={(_: any, event: any) => handleFilterChange(event.value)}
+            />
+            <DropdownSelect
+              fluid
+              selection
+              value={sort}
+              closeOnChange
+              placeholder="Sort"
+              options={sortOptions}
+              onChange={(_: any, event: any) => handleSortChange(event.value)}
+            />
+            <DropdownSelect
+              fluid
+              selection
+              value={downloadState}
+              closeOnChange
+              placeholder="State"
+              options={stateOptions}
+              onChange={(_: any, event: any) => handleStateChange(event.value)}
+            />
+          </>
+        </Container>
       )}
-    </Container>
+    </>
   )
 }

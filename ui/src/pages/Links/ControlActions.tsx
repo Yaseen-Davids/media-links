@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from "react";
+import React, { useContext, useMemo, useEffect } from "react";
 import 'rc-slider/assets/index.css';
 import styled from "styled-components";
 import { AutoplayCheckbox } from "../../components/AutoplayCheckbox";
@@ -33,36 +33,41 @@ export const ControlActions: React.FC<ControlActionsProps> = ({ }) => {
     return "00:00";
   }, [duration, progress]);
 
+  useEffect(() => {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+      setVolume(1);
+      setLocalStorageOptions("volume", 1);
+    }
+  }, []);
+
   return (
     <Container>
       <VideoPlayActionsWrapper>
         <VideoPlayActions>
           <MediaPlayerButtons />
           <ActionWrapper>
-            <span>{playedTime} / {fullTime}</span>
-            <Slider
-              min={0}
-              max={1}
-              step={0.001}
-              defaultValue={volume}
-              onAfterChange={(vol) => {
-                setVolume(vol);
-                setLocalStorageOptions("volume", vol);
-              }}
-              style={{ width: "70px", margin: "auto 0" }}
-              railStyle={{
-                background: "#cecece"
-              }}
-              trackStyle={{
-                background: "#B00020"
-              }}
-              handleStyle={{
-                background: "#B00020",
-                border: "1px solid #B00020",
-                height: 15,
-                width: 15
-              }}
-            />
+            <span style={{ width: "120px" }}>{playedTime} / {fullTime}</span>
+            <SliderWrapper>
+              <Slider
+                min={0}
+                max={1}
+                step={0.001}
+                defaultValue={volume}
+                onAfterChange={(vol) => {
+                  setVolume(vol);
+                  setLocalStorageOptions("volume", vol);
+                }}
+                style={{ width: "70px", margin: "auto 0" }}
+                railStyle={{ background: "#cecece" }}
+                trackStyle={{ background: "#dfdfdf" }}
+                handleStyle={{
+                  background: "#dfdfdf",
+                  border: "1px solid #dfdfdf",
+                  height: 15,
+                  width: 15
+                }}
+              />
+            </SliderWrapper>
           </ActionWrapper>
         </VideoPlayActions>
       </VideoPlayActionsWrapper>
@@ -86,7 +91,7 @@ const MediaPlayerButtons = () => {
   return (
     <MediaPlayerContainer>
       <div style={{ margin: "auto 0" }}>
-        <Button
+        <MediaPlayingButton
           basic
           circular
           size="medium"
@@ -98,7 +103,7 @@ const MediaPlayerButtons = () => {
         />
       </div>
       {playing ? (
-        <Button
+        <MediaPlayingButton
           basic
           circular
           size="huge"
@@ -109,7 +114,7 @@ const MediaPlayerButtons = () => {
           onClick={() => setPlaying(false)}
         />
       ) : (
-          <Button
+          <MediaPlayingButton
             basic
             circular
             size="huge"
@@ -121,7 +126,7 @@ const MediaPlayerButtons = () => {
           />
         )}
       <div style={{ margin: "auto 0" }}>
-        <Button
+        <MediaPlayingButton
           basic
           circular
           size="medium"
@@ -134,7 +139,20 @@ const MediaPlayerButtons = () => {
       </div>
     </MediaPlayerContainer>
   )
-}
+};
+
+const SliderWrapper = styled.span`
+  @media (max-width: 850px) and (min-width: 1px) {
+    display: none;
+  }
+`;
+
+const MediaPlayingButton = styled(Button)`
+  &&&&&&&&& {
+    color: #dadada !important;
+    box-shadow: 0 0 0 1px #dadada inset !important;
+  }
+`;
 
 const Container = styled.div`
   display: grid;
@@ -142,11 +160,19 @@ const Container = styled.div`
   grid-template-rows: 1fr;
   padding-left: 10px;
   padding-right: 10px;
+  @media (max-width: 850px) and (min-width: 1px) {
+    grid-template-columns: 1fr min-content;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
 `;
 
 const MediaPlayerOptions = styled.div`
   display: grid;
   grid-template-columns: 1fr min-content min-content;
+  @media (max-width: 850px) and (min-width: 1px) {
+    grid-template-columns: min-content min-content min-content;
+  }
 `;
 
 const VideoPlayActionsWrapper = styled.div`
@@ -154,7 +180,7 @@ const VideoPlayActionsWrapper = styled.div`
   grid-template-columns: 1fr;
   grid-gap: 10px;
   padding: 8px;
-  `;
+`;
 
 const VideoPlayActions = styled.div`
   display: grid;
@@ -162,7 +188,6 @@ const VideoPlayActions = styled.div`
   grid-gap: 10px;
   align-items: center;
   width: 100%;
-  /* border: 1px solid #cecece; */
 `;
 
 const ActionWrapper = styled.div`
@@ -170,5 +195,4 @@ const ActionWrapper = styled.div`
   grid-template-columns: 100px 1fr;
   grid-gap: 10px;
   color: grey;
-  /* border: 1px solid #cecece; */
 `;
