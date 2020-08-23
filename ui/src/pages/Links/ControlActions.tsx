@@ -53,7 +53,7 @@ export const ControlActions: React.FC<ControlActionsProps> = ({ }) => {
                 max={1}
                 step={0.001}
                 defaultValue={volume}
-                onAfterChange={(vol) => {
+                onAfterChange={(vol: any) => {
                   setVolume(vol);
                   setLocalStorageOptions("volume", vol);
                 }}
