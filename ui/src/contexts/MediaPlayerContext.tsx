@@ -2,6 +2,7 @@ import React, { createContext, useMemo, useState, useContext, useCallback, useEf
 import { Loading, defaultLoading } from "../models/loading";
 import { MediaLinks } from "../models/media-links";
 import { LinksContext } from "./LinksContext";
+import { useHistory } from "react-router-dom";
 
 export type MediaPlayerState = {
   loading: Loading;
@@ -53,12 +54,13 @@ export const MediaPlayerProvider: React.FC = ({ children }) => {
   const [duration, setDuration] = useState<number>(0);
   const [seek, seekTo] = useState<number | null>(null);
   const [loop, setLoop] = useState<boolean>(false);
+  const history = useHistory();
 
   const playVideoByCurrent = async (currentVideo: MediaLinks, index: number) => {
     const nextVideoIndex = links.findIndex(item => item.id == currentVideo.id);
     const nextVideoToPlay = links[nextVideoIndex + index];
     if (nextVideoToPlay) {
-      setCurrentVideo(nextVideoToPlay);
+      history.push(nextVideoToPlay.id);
     }
   };
 

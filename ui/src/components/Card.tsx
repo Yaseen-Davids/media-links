@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import styled from "styled-components";
 import { Dropdown } from "semantic-ui-react";
 import { MediaLinks } from "../models/media-links";
 import { deleteMediaLink } from "../lib/media-links";
 import { LinksContext } from "../contexts/LinksContext";
 import { MediaPlayerContext } from "../contexts/MediaPlayerContext";
+import { useHistory } from "react-router-dom";
 
 const CardContainer = styled.div`
   width: 100%;
@@ -71,6 +72,7 @@ const CardButtons = styled.div`
 
 const DropdownSelect = styled(Dropdown)`
   &&&&&& {
+    z-index: 1000000;
     color: #cecece;
     font-size: 12px;
     .ellipsis.vertical.icon {
@@ -106,10 +108,11 @@ type CardProps = {
 };
 
 export const Card: React.FC<CardProps> = ({ link }) => {
-  const { setCurrentVideo, links, setLinks, currentVideo } = useContext(LinksContext);
+  const { links, setLinks, currentVideo } = useContext(LinksContext);
   const { setDuration, setProgress, setPlaying } = useContext(MediaPlayerContext);
+  const history = useHistory();
 
-  const handleDeleteLink = async (id: number) => {
+  const handleDeleteLink = async (id: string) => {
     await deleteMediaLink(id);
     const linkIndex = links.findIndex(link => link.id === id);
     links.splice(linkIndex, 1);
@@ -118,10 +121,14 @@ export const Card: React.FC<CardProps> = ({ link }) => {
 
   const handlePlayVideo = () => {
     setPlaying(true);
-    setCurrentVideo(link);
+    history.push(link.id);
     setDuration(0);
     setProgress(0);
   };
+
+  const handleCopyUrl = useCallback((url: string) => {
+    navigator.clipboard.writeText(url);
+  }, [navigator]);
 
   return (
     <CardContainer bgcolor={currentVideo.id === link.id ? "#1a1a1a" : "transparent"}>
@@ -135,8 +142,8 @@ export const Card: React.FC<CardProps> = ({ link }) => {
             icon="ellipsis vertical"
             direction="left"
           >
-            <Dropdown.Menu>
-              <Dropdown.Item icon="copy" text="Copy link" onClick={() => navigator.clipboard.writeText(link.author_url)} />
+            <Dropdown.Menu style={{ zIndex: 100000 }}>
+              <Dropdown.Item icon="copy" text="Copy link" onClick={() => handleCopyUrl(link.author_url)} />
               <Dropdown.Item icon="trash" text="Delete" onClick={() => handleDeleteLink(link.id)} />
             </Dropdown.Menu>
           </DropdownSelect>

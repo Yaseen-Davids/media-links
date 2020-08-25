@@ -1,6 +1,6 @@
 export type MediaLinks = {
   index: number;
-  id: number;
+  id: string;
   title: string;
   type: string;
   thumbnail_url: string;

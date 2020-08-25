@@ -4,8 +4,9 @@ import { MediaLinks } from "../models/media-links";
 import { getAllMediaLinks } from "../lib/media-links";
 import { FilterOptions, sortOptions, downloadStateOptions } from "../models/filters";
 import { UserContext } from "./UserContext";
+import { useRouteMatch } from "react-router-dom";
 
-const defaultCurrentVideo = { index: 0, author_url: "", downloaded: 0, id: 0, thumbnail_url: "", title: "", type: "", date_added: new Date(), provided_name: "" };
+const defaultCurrentVideo = { index: 0, author_url: "", downloaded: 0, id: "", thumbnail_url: "", title: "", type: "", date_added: new Date(), provided_name: "" };
 
 const defaultLocalStorage = '{"options":{"autoplay":true,"filters":["song"],"sort":"sortDateDescending","downloadState":"active", "volume": 0}}';
 
@@ -68,6 +69,7 @@ export const LinksProvider: React.FC = ({ children }) => {
   const [currentVideo, setCurrentVideo] = useState<MediaLinks>(defaultCurrentVideo);
   const { user } = useContext(UserContext);
   const [showFilters, toggleFilters] = useState<boolean>(false);
+  const match = useRouteMatch<any>({ path: "/:videoId?" });
 
   const setLocalStorageOptions = (which: string, value: any) => {
     const options = {
@@ -120,6 +122,13 @@ export const LinksProvider: React.FC = ({ children }) => {
       document.title = "MediaLinks";
     }
   }, [currentVideo]);
+
+  useEffect(() => {
+    if (links.length > 0 && match?.params.videoId && match?.params.videoId.length > 0) {
+      const video: any = links.find(link => link.id === match.params.videoId);
+      setCurrentVideo(video);
+    }
+  }, [match]);
 
   const value = useMemo(() => ({
     localStorageOptions,
