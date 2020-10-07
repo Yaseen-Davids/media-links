@@ -30,7 +30,7 @@ const app = express();
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("ui/build"));
 
-  app.get("*", (req, res, next) => {
+  app.get("/", (req, res, next) => {
     res.sendFile(path.resolve(__dirname, "ui", "build", "index.html"));
   });
 }
