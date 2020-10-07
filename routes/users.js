@@ -34,6 +34,15 @@ router.post("/login", async (req, res, next) => {
   })(req, res, next);
 });
 
+router.get("/logout", async (req, res, next) => {
+  try {
+    req.logout();
+    return res.send();
+  } catch (error) {
+    return next(error);
+  }
+})
+
 router.post("/register", async (req, res, next) => {
   try {
     await CreateUser(req.body);

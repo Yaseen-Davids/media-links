@@ -6,6 +6,7 @@ import { deleteMediaLink } from "../lib/media-links";
 import { LinksContext } from "../contexts/LinksContext";
 import { MediaPlayerContext } from "../contexts/MediaPlayerContext";
 import { useHistory } from "react-router-dom";
+import { LoginContext } from "../contexts/LoginContext";
 
 const CardContainer = styled.div`
   width: 100%;
@@ -111,6 +112,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
   const { links, setLinks, currentVideo } = useContext(LinksContext);
   const { setDuration, setProgress, setPlaying } = useContext(MediaPlayerContext);
   const history = useHistory();
+  const { loggedIn } = useContext(LoginContext);
 
   const handleDeleteLink = async (id: string) => {
     await deleteMediaLink(id);
@@ -144,7 +146,9 @@ export const Card: React.FC<CardProps> = ({ link }) => {
           >
             <Dropdown.Menu style={{ zIndex: 100000 }}>
               <Dropdown.Item icon="copy" text="Copy link" onClick={() => handleCopyUrl(link.author_url)} />
-              <Dropdown.Item icon="trash" text="Delete" onClick={() => handleDeleteLink(link.id)} />
+              {loggedIn && (
+                <Dropdown.Item icon="trash" text="Delete" onClick={() => handleDeleteLink(link.id)} />
+              )}
             </Dropdown.Menu>
           </DropdownSelect>
         </CardButtons>

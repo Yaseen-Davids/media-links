@@ -1,10 +1,10 @@
-import React, { createContext, useMemo, useState, useEffect, useContext } from "react";
+import React, { createContext, useMemo, useState, useEffect } from "react";
 import { Loading, defaultLoading } from "../models/loading";
 import { MediaLinks } from "../models/media-links";
 import { getAllMediaLinks } from "../lib/media-links";
-import { FilterOptions, sortOptions, downloadStateOptions } from "../models/filters";
-import { UserContext } from "./UserContext";
+import { sortOptions, downloadStateOptions } from "../models/filters";
 import { useRouteMatch } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 const defaultCurrentVideo = { index: 0, author_url: "", downloaded: 0, id: "", thumbnail_url: "", title: "", type: "", date_added: new Date(), provided_name: "" };
 
@@ -22,7 +22,6 @@ export type LinksContextState = {
   loading: Loading;
   links: MediaLinks[];
   reload: boolean;
-  filters: FilterOptions;
   sort: string;
   downloadState: string;
   currentVideo: MediaLinks;
@@ -30,7 +29,6 @@ export type LinksContextState = {
   showFilters: boolean;
   setLinks(links: MediaLinks[]): void;
   setReload(reload: boolean): void;
-  setFilters(filters: FilterOptions): void;
   setSort(sort: string): void;
   setDownloadState(downloadState: string): void;
   setCurrentVideo(currentVideo: MediaLinks): void;
@@ -42,7 +40,6 @@ export const LinksContext = createContext<LinksContextState>({
   loading: defaultLoading,
   links: [],
   reload: true,
-  filters: ["song"],
   sort: "sortDateDescending",
   downloadState: "active",
   currentVideo: defaultCurrentVideo,
@@ -50,7 +47,6 @@ export const LinksContext = createContext<LinksContextState>({
   showFilters: false,
   setLinks: () => { },
   setReload: () => { },
-  setFilters: () => { },
   setSort: () => { },
   setDownloadState: () => { },
   setCurrentVideo: () => { },
@@ -63,13 +59,12 @@ export const LinksProvider: React.FC = ({ children }) => {
   const [loading, setLoading] = useState<Loading>(defaultLoading);
   const [links, setLinks] = useState<MediaLinks[]>([]);
   const [reload, setReload] = useState<boolean>(true);
-  const [filters, setFilters] = useState<FilterOptions>(localStorageOptions.filters);
   const [sort, setSort] = useState<string>(localStorageOptions.sort);
   const [downloadState, setDownloadState] = useState<string>(localStorageOptions.downloadState);
   const [currentVideo, setCurrentVideo] = useState<MediaLinks>(defaultCurrentVideo);
-  const { user } = useContext(UserContext);
   const [showFilters, toggleFilters] = useState<boolean>(false);
-  const match = useRouteMatch<any>({ path: "/:videoId?" });
+  const match = useRouteMatch<any>({ path: "/:playlistId/:videoId?" });
+  const history = useHistory();
 
   const setLocalStorageOptions = (which: string, value: any) => {
     const options = {
@@ -88,11 +83,10 @@ export const LinksProvider: React.FC = ({ children }) => {
         loading: true,
         error: undefined
       });
-      const result = await getAllMediaLinks({
-        filters,
+      const playlistId = match?.params.playlistId;
+      const result = await getAllMediaLinks(playlistId, {
         sort: sortOptions[sort],
         downloadState: downloadStateOptions[downloadState],
-        userId: user.id,
       });
       setLinks(result.map((item, i) => ({ ...item, index: i + 1 })));
       setLoading({
@@ -113,7 +107,13 @@ export const LinksProvider: React.FC = ({ children }) => {
   useEffect(() => {
     setReload(false);
     setData();
-  }, [reload, filters, sort, downloadState, user]);
+  }, [reload, sort, downloadState]);
+
+  useEffect(() => {
+    if (history.location.search.includes("login=false")) {
+      toggleFilters(true);
+    }
+  }, [history.location]);
 
   useEffect(() => {
     if (currentVideo.title.length > 0) {
@@ -135,14 +135,12 @@ export const LinksProvider: React.FC = ({ children }) => {
     loading,
     links,
     reload,
-    filters,
     sort,
     downloadState,
     currentVideo,
     showFilters,
     setLinks,
     setReload,
-    setFilters,
     setSort,
     setDownloadState,
     setCurrentVideo,
@@ -152,7 +150,6 @@ export const LinksProvider: React.FC = ({ children }) => {
     localStorageOptions,
     loading,
     reload,
-    filters,
     sort,
     downloadState,
     currentVideo,

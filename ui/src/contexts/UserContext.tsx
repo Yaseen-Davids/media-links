@@ -48,7 +48,7 @@ export const UserProvider: React.FC = ({ children }) => {
     } catch (error) {
       setLoading({
         loading: false,
-        loaded: false,
+        loaded: true,
         error: error,
       });
     }

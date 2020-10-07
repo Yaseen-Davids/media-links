@@ -5,6 +5,7 @@ import { Form, Field } from "react-final-form";
 import { LinksContext } from "../../contexts/LinksContext";
 import { createMediaLink } from "../../lib/media-links";
 import { UserContext } from "../../contexts/UserContext";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 const Container = styled.div`
   font-size: 12px;
@@ -66,6 +67,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
   const [type, setType] = useState<string>("");
   const required = (value: any) => value ? undefined : "Please enter a YouTube link.";
   const { user } = useContext(UserContext);
+  const match = useRouteMatch<any>({ path: "/:playlistId/:videoId?" });
 
   const handleTypeChange = (e: any, { value }: any) => {
     setType(value);
@@ -80,7 +82,8 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
             const { data } = await createMediaLink({
               url: fields.link,
               type: type || "song",
-              userId: user.id
+              userId: user.id,
+              playlistId: match?.params.playlistId
             });
             links.splice(0, 0, data.data);
             setLinks([...links]);

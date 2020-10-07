@@ -1,17 +1,17 @@
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useContext } from "react";
 import styled from "styled-components";
-import { Dropdown, Button, Icon } from "semantic-ui-react";
+import { Dropdown } from "semantic-ui-react";
 import { LinksContext } from "../../contexts/LinksContext";
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr 140px;
+  grid-template-columns: 1fr 1fr;
   margin-bottom: 20px;
   grid-gap: 10px;
   font-size: 12px;
   @media (max-width: 850px) and (min-width: 1px) {
     grid-template-columns: 1fr;
-    grid-template-row: min-content 1fr 1fr;
+    grid-template-row: 1fr 1fr;
   }
 `;
 
@@ -52,12 +52,7 @@ const DropdownSelect = styled(Dropdown)`
 type FiltersProps = {};
 
 export const Filters: FC<FiltersProps> = () => {
-  const { filters, setFilters, sort, setSort, downloadState, setDownloadState, setLocalStorageOptions, showFilters } = useContext(LinksContext);
-
-  const filterOptions = [
-    { key: 1, text: "Songs", value: "song" },
-    { key: 2, text: "Videos", value: "video" },
-  ];
+  const { sort, setSort, downloadState, setDownloadState, setLocalStorageOptions, showFilters } = useContext(LinksContext);
 
   const sortOptions = [
     { key: 1, text: "Sort date ascending", value: "sortDateAscending", icon: "arrow up" },
@@ -70,16 +65,6 @@ export const Filters: FC<FiltersProps> = () => {
     { key: 1, text: "Active", value: "active" },
     { key: 2, text: "Removed", value: "removed" },
   ];
-
-  const handleFilterChange = (changes: string[]) => {
-    if (changes.length <= 0) {
-      setFilters(["song"]);
-      setLocalStorageOptions("filters", ["song"]);
-    } else {
-      setFilters(changes);
-      setLocalStorageOptions("filters", changes);
-    }
-  };
 
   const handleSortChange = (changes: any) => {
     if (changes.length <= 0) {
@@ -106,16 +91,6 @@ export const Filters: FC<FiltersProps> = () => {
       {showFilters && (
         <Container>
           <>
-            <DropdownSelect
-              fluid
-              multiple
-              selection
-              closeOnChange
-              value={filters}
-              options={filterOptions}
-              placeholder="Filters"
-              onChange={(_: any, event: any) => handleFilterChange(event.value)}
-            />
             <DropdownSelect
               fluid
               selection

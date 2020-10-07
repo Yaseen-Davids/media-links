@@ -7,16 +7,16 @@ import { Filters } from "./Filters";
 import { LinksContext } from "../../contexts/LinksContext";
 import { Loading } from "../../components/Loading";
 import { VideoPlayer } from "./VideoPlayer";
-import { UserContext } from "../../contexts/UserContext";
 import { ControlActions } from "./ControlActions";
 import { MediaPlayerProvider } from "../../contexts/MediaPlayerContext";
 import { ProgressBar } from "../../components/ProgressBar";
+import { LoginContext } from "../../contexts/LoginContext";
 
 type LinksContentProps = {};
 
 const Container = styled.div`
   position: relative;
-  height: 100%;
+  height: calc(100% - 50px);
   display: grid;
   grid-template-areas: 
   "header header header"
@@ -74,6 +74,14 @@ const CardsWrapper = styled.div`
   }
 `;
 
+const NoDataContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+`;
+
 const Controls = styled.div`
   grid-area: control;
   background: #1f1f1f;
@@ -81,16 +89,16 @@ const Controls = styled.div`
 
 export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
   const { loading, links } = useContext(LinksContext);
-  const { loading: userLoading } = useContext(UserContext);
   const [dataLoading, setDataLoading] = useState(true);
+  const { loggedIn } = useContext(LoginContext);
 
   useEffect(() => {
     if (dataLoading) {
-      if ((!loading.loading && loading.loaded) && (!userLoading.loading && userLoading.loaded)) {
+      if ((!loading.loading && loading.loaded)) {
         setDataLoading(false);
       }
     }
-  }, [loading, userLoading, dataLoading]);
+  }, [loading, dataLoading]);
 
   return (
     <MediaPlayerProvider>
@@ -100,7 +108,9 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
         </Content>
         <VideoPlayerContent>
           <HeaderActionsWrapper>
-            <CreateLink />
+            {loggedIn && (
+              <CreateLink />
+            )}
             <Filters />
           </HeaderActionsWrapper>
           {dataLoading ? (
@@ -111,7 +121,11 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
                   links.map((link: MediaLinks, index: number) => (
                     <Card key={index} link={link} />
                   )))
-                  : <p style={{ color: "#fafafa" }}>No links found.</p>
+                  : (
+                    <NoDataContainer>
+                      <p style={{ color: "#fafafa" }}>No links found.</p>
+                    </NoDataContainer>
+                  )
                 }
               </CardsWrapper>
             )}

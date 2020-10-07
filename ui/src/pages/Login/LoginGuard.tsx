@@ -1,8 +1,10 @@
-import React from "react";
-import { Redirect } from "react-router-dom";
+import React, { useEffect, useContext } from "react";
+import { Redirect, useHistory } from "react-router-dom";
+import { LoginContext } from "../../contexts/LoginContext";
 import { whoami } from "../../lib/user";
 
-export const checkLogin = async (setLoggedIn: any) => {
+export const checkLogin = async (setLoggedIn: any, history: any) => {
+
   try {
     const resp = await whoami();
     if (resp.status >= 400) {
@@ -10,20 +12,24 @@ export const checkLogin = async (setLoggedIn: any) => {
     }
     setLoggedIn(true);
   } catch (e) {
+    history.push("?login=false");
     setLoggedIn(false);
   }
 }
 
-export const LoginGuard: React.FunctionComponent<any> = ({ match }) => {
-  const [loggedIn, setLoggedIn] = React.useState(true);
+export const LoginGuard: React.FunctionComponent<any> = ({ }) => {
+  const { setLoggedIn } = useContext(LoginContext);
+  const history = useHistory();
 
-  React.useEffect(() => {
-    checkLogin(setLoggedIn);
-  }, [match.url]);
+  useEffect(() => {
+    checkLogin(setLoggedIn, history);
+  }, [history.location.pathname]);
 
-  if (!loggedIn) {
-    return <Redirect to="/login" />;
-  }
+  // if (!loggedIn) {
+  // console.log("Here")
+  // history.push("?login=false");
+  // return <Redirect to="/" />;
+  // }
 
   return null;
 };
