@@ -27,14 +27,6 @@ const playlistRouter = require("./routes/playlists");
 
 const app = express();
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "ui", "build")));
-
-  app.get("*", (req, res, next) => {
-    res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
-  });
-}
-
 app.use(
   require("express-session")({
     // store: new RedisStore({
@@ -64,6 +56,14 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/youtube", youtubeRouter);
 app.use("/playlists", playlistRouter);
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "ui", "build")));
+
+  app.get("*", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
+  });
+}
 
 app.use(function (req, res, next) {
   next(createError(404));
