@@ -61,7 +61,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("secret"));
 
 app.use("/", indexRouter);
-app.use("/users", usersRouter);
+app.use("/api/users", usersRouter);
 app.use("/youtube", youtubeRouter);
 app.use("/playlists", playlistRouter);
 

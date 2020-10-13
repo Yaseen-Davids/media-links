@@ -6,9 +6,11 @@ const { ensureAuthenticated } = require("../repositories/base");
 
 router.get("/whoami", async (req, res, next) => {
   try {
-    return res.status(401).send();
-    // const user = await GetUserById(req.user.id);
-    // return res.json({ ...user }).end();
+    const user = await GetUserById(req.user.id);
+    if (!user) {
+      return res.status(401).send();
+    }
+    return res.json({ ...user }).end();
   } catch (error) {
     return next(e);
   }
