@@ -30,7 +30,7 @@ const app = express();
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("ui/build"));
 
-  app.get("/*", (req, res, next) => {
+  app.get("*", (req, res, next) => {
     res.sendFile(path.resolve(__dirname, "ui", "build", "index.html"));
   });
 }
@@ -61,7 +61,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("secret"));
 
 app.use("/", indexRouter);
-app.use("/api/users", usersRouter);
+app.use("/users", usersRouter);
 app.use("/youtube", youtubeRouter);
 app.use("/playlists", playlistRouter);
 
@@ -70,8 +70,13 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get("env") === "development" ? err : {};
+
+  // render the error page
   res.status(err.status || 500);
-  return res.json({ message: "An unexpected error has occured" });
+  res.send();
 });
 
 module.exports = app;

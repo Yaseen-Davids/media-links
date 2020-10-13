@@ -4,7 +4,7 @@ const passport = require("passport");
 const { CreateUser, GetUserById } = require("../repositories/user");
 const { ensureAuthenticated } = require("../repositories/base");
 
-router.get("/whoami", async (req, res, next) => {
+router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
   try {
     const user = await GetUserById(req.user.id);
     if (!user) {
