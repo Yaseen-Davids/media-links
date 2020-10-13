@@ -28,10 +28,10 @@ const playlistRouter = require("./routes/playlists");
 const app = express();
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("ui/build"));
+  app.use(express.static(path.join(__dirname, "ui", "build")));
 
   app.get("*", (req, res, next) => {
-    res.sendFile(path.resolve(__dirname, "ui", "build", "index.html"));
+    res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
   });
 }
 
