@@ -6,7 +6,12 @@ const { ensureAuthenticated } = require("../repositories/base");
 
 router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
   try {
+    console.log("req.user.id", req.user.id);
     const user = await GetUserById(req.user.id);
+    console.log("user", user);
+    if (!user) {
+      throw "User not logged in!";
+    }
     return res.json({ ...user }).end();
   } catch (error) {
     return next(e);
@@ -41,7 +46,7 @@ router.get("/logout", async (req, res, next) => {
   } catch (error) {
     return next(error);
   }
-})
+});
 
 router.post("/register", async (req, res, next) => {
   try {
