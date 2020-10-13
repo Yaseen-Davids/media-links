@@ -45,6 +45,15 @@ app.use(passport.session());
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "public")));
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "ui", "build")));
+
+  app.get("*", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
+  });
+}
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -55,16 +64,6 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/youtube", youtubeRouter);
 app.use("/playlists", playlistRouter);
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "ui", "build")));
-
-  app.get("*", (req, res, next) => {
-    res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
-  });
-}
-
-app.use(express.static(path.join(__dirname, "public")));
 
 app.use(function (req, res, next) {
   next(createError(404));
