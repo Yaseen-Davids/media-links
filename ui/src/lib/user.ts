@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const whoami = async (): Promise<any> => await axios.get("/api/users/whoami");
+export const whoami = async (): Promise<any> => await axios.get("/users/whoami/qwu90e2u901hiopdfhiosadfhiopasdhiopsadopisadjiopasidio");
 
 export const login = async (fields: { username: string; password: string }) =>
   await axios.post("/users/login", fields, {
