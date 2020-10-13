@@ -43,22 +43,10 @@ require("./config/passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "ejs");
-app.use(express.static(path.join(__dirname, "public")));
-
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("secret"));
-
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "ui", "build")));
-
-  app.get("*", (req, res, next) => {
-    res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
-  });
-}
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
@@ -78,5 +66,17 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send();
 });
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "ui", "build")));
+
+  app.get("*", (req, res, next) => {
+    res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
+  });
+}
+
+app.set("views", path.join(__dirname, "views"));
+app.set("view engine", "ejs");
+app.use(express.static(path.join(__dirname, "public")));
 
 module.exports = app;
