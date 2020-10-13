@@ -22,7 +22,6 @@ export const Login = () => {
             setError(undefined);
             const resp = await login(fields);
             if (resp.status >= 400) {
-              console.log(resp);
               return;
             }
             await hydrateUser();

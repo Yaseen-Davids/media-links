@@ -123,7 +123,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
 
   const handlePlayVideo = () => {
     setPlaying(true);
-    history.push(link.id);
+    history.push(`/${link.id}`);
     setDuration(0);
     setProgress(0);
   };

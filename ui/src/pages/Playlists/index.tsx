@@ -41,7 +41,7 @@ export const Playlists = () => {
               {loading.loading && <PlaylistLoader active inline />}
             </PlaylistHeaderText>
             <PlaylistLayout>
-              {playlists.map((playlist) => <PlaylistCard title={playlist.name} onClick={() => handleOpenPlaylist(playlist)} />)}
+              {(playlists || []).map((playlist) => <PlaylistCard title={playlist.name} onClick={() => handleOpenPlaylist(playlist)} />)}
               <CreatePlaylistCard />
             </PlaylistLayout>
           </PlaylistSection>

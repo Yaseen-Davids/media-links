@@ -1,44 +1,17 @@
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
-import { Input, Button, Select, Icon } from "semantic-ui-react";
+import { Input, Button, Icon } from "semantic-ui-react";
 import { Form, Field } from "react-final-form";
 import { LinksContext } from "../../contexts/LinksContext";
 import { createMediaLink } from "../../lib/media-links";
 import { UserContext } from "../../contexts/UserContext";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useRouteMatch } from "react-router-dom";
 
 const Container = styled.div`
   font-size: 12px;
   @media (max-width: 850px) and (min-width: 1px) {
     font-size: 11px;
   };
-`;
-
-const DropdownSelect = styled(Select)`
-  &&&&&&& {
-    color: #cecece;
-    background-color: #1f1f1f;
-    @media (max-width: 850px) and (min-width: 1px) {
-      font-size: 11px;
-    }
-    div.text {
-      color: #cecece;
-    }
-    .menu.transition {
-      background-color: #1f1f1f;
-      border: 1px solid #333;
-      div {
-        border: 1px solid #333;
-        font-size: 12px;
-        @media (max-width: 850px) and (min-width: 1px) {
-          font-size: 11px;
-        };
-      }
-      span {
-        color: #cecece;
-      }
-    }
-  }
 `;
 
 const FormContainer = styled.form`
@@ -64,14 +37,9 @@ type CreateLinkProps = {};
 export const CreateLink: React.FC<CreateLinkProps> = () => {
   const { setLinks, links, toggleFilters, showFilters } = useContext(LinksContext);
   const [loading, setLoading] = useState<boolean>(false);
-  const [type, setType] = useState<string>("");
   const required = (value: any) => value ? undefined : "Please enter a YouTube link.";
   const { user } = useContext(UserContext);
   const match = useRouteMatch<any>({ path: "/:playlistId/:videoId?" });
-
-  const handleTypeChange = (e: any, { value }: any) => {
-    setType(value);
-  };
 
   return (
     <Container>
@@ -81,7 +49,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
           try {
             const { data } = await createMediaLink({
               url: fields.link,
-              type: type || "song",
+              type: "video",
               userId: user.id,
               playlistId: match?.params.playlistId
             });
@@ -108,16 +76,6 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                     />
                   </>
                 )}
-              />
-              <DropdownSelect
-                compact
-                options={[
-                  { key: "Song", text: "Song", value: "song" },
-                  { key: "Video", text: "Video", value: "video" },
-                ]}
-                placeholder="Type"
-                onChange={handleTypeChange}
-                defaultValue="song"
               />
               <Button
                 basic

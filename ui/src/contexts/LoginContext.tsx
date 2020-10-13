@@ -21,8 +21,6 @@ export const LoginProvider: React.FC = ({ children }) => {
     }
   }, [history.location]);
 
-  console.log("loggedIn", loggedIn);
-
   const value = useMemo(() => ({
     loggedIn,
     setLoggedIn
