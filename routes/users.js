@@ -4,10 +4,11 @@ const passport = require("passport");
 const { CreateUser, GetUserById } = require("../repositories/user");
 const { ensureAuthenticated } = require("../repositories/base");
 
-router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
+router.get("/whoami", async (req, res, next) => {
   try {
-    const user = await GetUserById(req.user.id);
-    return res.json({ ...user }).end();
+    return res.status(401).send();
+    // const user = await GetUserById(req.user.id);
+    // return res.json({ ...user }).end();
   } catch (error) {
     return next(e);
   }
