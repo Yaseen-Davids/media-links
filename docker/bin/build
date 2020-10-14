@@ -1,0 +1,2 @@
+docker build -t medialinks_api .
+docker build -t medialinks_ui .

@@ -1,0 +1,12 @@
+build:
+  docker:
+    api: ./packages/api/Dockerfile
+    ui: ./packages/ui/Dockerfile
+  config:
+    NODE_ENV: production
+    REDIS_URL: redis://h:p886d8cc89ee7387189339b933c4b088a0de9e544ee289f37f500f0d2375165ac@ec2-52-201-164-53.compute-1.amazonaws.com:32049
+    DATABASE_URL: postgres://dxvkytxzfewoeu:3e48287c1d0e4a03e815b7b4800f5777fc1d38e0d849c056ccd0267e70d985ac@ec2-23-22-156-110.compute-1.amazonaws.com:5432/d5nlrdsv1etj12?ssl=true&ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory
+    YOUTUBE_API_KEY: AIzaSyCbGOVYjQdTGOn_xfi49fL0aqWZyDyKmCc
+
+run:
+  api: npm run start
