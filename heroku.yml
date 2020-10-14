@@ -2,7 +2,7 @@ build:
   docker:
     web: ./packages/api/Dockerfile
     api: ./packages/api/Dockerfile
-    ui: ./packages/ui/Dockerfile.dev
+    ui: ./packages/ui/Dockerfile
   config:
     DEBUG: api:*
     NODE_ENV: production
