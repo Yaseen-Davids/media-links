@@ -5,8 +5,8 @@
   "scripts": {
     "client": "cd ui && npm start",
     "start": "node -r dotenv/config ./bin/www",
-    "server": "nodemon",
-    "dev": "concurrently -n api,ui --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "server": "nodemon dotenv/config ./bin/www",
+    "dev": "concurrently -n api --kill-others-on-fail \"npm run server\"",
     "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix ui && npm run build --prefix ui"
   },
   "dependencies": {
@@ -17,6 +17,8 @@
     "concurrently": "^5.1.0",
     "connect-redis": "^4.0.4",
     "cookie-parser": "~1.4.4",
+    "cors": "^2.8.5",
+    "createerror": "^1.3.0",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
     "ejs": "^3.1.2",

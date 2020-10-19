@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:alpine as build
 
 WORKDIR /usr/src/app
 
@@ -10,5 +10,3 @@ RUN npm install nodemon -g
 COPY . .
 
 EXPOSE 8080
-
-CMD ["npm", "start"]

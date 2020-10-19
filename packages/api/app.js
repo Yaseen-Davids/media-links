@@ -5,6 +5,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const passport = require("passport");
+const cors = require("cors");
 // const session = require("express-session");
 // const redis = require("redis");
 // const RedisStore = require("connect-redis")(session);
@@ -36,6 +37,18 @@ app.use(
     resave: false,
     saveUninitialized: false,
   })
+);
+
+app.use(
+  cors({
+    origin(origin, next) {
+      console.log("origin", origin);
+      if (!origin || ["http://medialinks.dev"].includes(origin)) {
+        return next(undefined, true);
+      }
+      return next(new Error(`Origin not allowed by CORS`));
+    },
+  }),
 );
 
 if (process.env.NODE_ENV === "production") {
@@ -70,6 +83,8 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
+
+  console.log("Error", err);
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get("env") === "development" ? err : {};

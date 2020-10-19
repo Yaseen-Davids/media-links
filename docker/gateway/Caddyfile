@@ -1,0 +1,12 @@
+http://medialinks.dev {
+  gzip
+  proxy /api http://api:8080 {
+      transparent
+      websocket
+  }
+
+  proxy / http://ui:3000 {
+      transparent
+      websocket
+  }
+}

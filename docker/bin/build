@@ -1,2 +1,3 @@
-docker build -t medialinks_api ./packages/api
-docker build -t medialinks_ui ./packages/ui
+docker build -t medialinks_api ../packages/api
+docker build -t medialinks_ui ../packages/ui
+docker build -t medialinks_ui ./proxy
