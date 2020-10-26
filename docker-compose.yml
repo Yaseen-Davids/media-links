@@ -5,10 +5,7 @@ services:
     image: gateway
     build: ./docker/gateway
     volumes:
-      - ./docker/gateway/Caddyfile:/etc/Caddyfile
-    ports:
-      - 80:80
-      - 443:443
+      - ./docker/gateway-prod/Caddyfile:/etc/Caddyfile
 
   api:
     build:
