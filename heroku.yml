@@ -11,4 +11,4 @@ build:
     YOUTUBE_API_KEY: AIzaSyCbGOVYjQdTGOn_xfi49fL0aqWZyDyKmCc
 
 run:
-  api: npm run start
+  api: npm run server

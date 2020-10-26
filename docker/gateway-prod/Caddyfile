@@ -1,4 +1,4 @@
-http://medialinks.dev {
+https://medialinks.herokuapp.com {
   gzip
   proxy / http://ui:3000 {
       transparent
@@ -6,7 +6,7 @@ http://medialinks.dev {
   }
 }
 
-http://medialinks.dev/api {
+https://medialinks.herokuapp.com/api {
   gzip
   proxy / http://api:3000 {
       transparent
