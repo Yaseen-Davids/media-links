@@ -1,6 +1,6 @@
 build:
   docker:
-    web: ./docker/gateway-prod/Dockerfile
+    # web: ./docker/gateway-prod/Dockerfile
     api: ./packages/api/Dockerfile
     ui: ./packages/ui/Dockerfile
   config:
