@@ -1,12 +1,6 @@
 version: "3"
 
 services:
-  gateway:
-    image: gateway
-    build: ./docker/gateway
-    volumes:
-      - ./docker/gateway-prod/Caddyfile:/etc/Caddyfile
-
   api:
     build:
       context: ./packages/api
