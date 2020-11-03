@@ -1,30 +1,28 @@
 version: "3"
 
 services:
-    gateway:
-    image: gateway
-    build: ./docker/gateway-prod
-    volumes:
-      - ./docker/gateway-prod/Caddyfile:/etc/Caddyfile
-      - .caddy:/root/.caddy
-    ports:
-      - 80:80
-      - 443:443
-
-  api:
-    build:
-      context: ./packages/api
-      dockerfile: Dockerfile
-    env_file: .env
-    command: npm run server
-    volumes:
-      - /usr/src/app/node_modules
-      - ./packages/api:/usr/src/app/
-
-  ui:
+  #   gateway:
+  #   image: gateway
+  #   build: ./docker/gateway-prod
+  #   volumes:
+  #     - ./docker/gateway-prod/Caddyfile:/etc/Caddyfile
+  #     - .caddy:/root/.caddy
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  # api:
+  #   build:
+  #     context: ./packages/api
+  #     dockerfile: Dockerfile
+  #   env_file: .env
+  #   command: npm run server
+  #   volumes:
+  #     - /usr/src/app/node_modules
+  #     - ./packages/api:/usr/src/app/
+  web:
     build:
       context: ./packages/ui
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     env_file: .env
     command: npm start
     volumes:

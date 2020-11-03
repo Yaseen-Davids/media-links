@@ -12,6 +12,4 @@ COPY . .
 
 RUN npm run build
 
-FROM nginx as server
-COPY ./config/nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /app/build /usr/share/nginx/html
+CMD ["serve", "-p", "$PORT", "-s", "dist"]
