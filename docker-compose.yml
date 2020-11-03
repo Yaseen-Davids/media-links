@@ -1,11 +1,12 @@
 version: "3"
 
 services:
-  gateway:
+    gateway:
     image: gateway
-    build: ./docker/gateway
+    build: ./docker/gateway-prod
     volumes:
-      - ./docker/gateway/Caddyfile:/etc/Caddyfile
+      - ./docker/gateway-prod/Caddyfile:/etc/Caddyfile
+      - .caddy:/root/.caddy
     ports:
       - 80:80
       - 443:443
