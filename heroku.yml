@@ -1,8 +1,8 @@
 build:
   docker:
-    # web: ./docker/gateway-prod/Dockerfile
+    web: ./docker/gateway-prod/Dockerfile
     web: ./packages/ui/Dockerfile
-    # api: ./packages/api/Dockerfile
+    api: ./packages/api/Dockerfile
   config:
     DEBUG: api:*
     NODE_ENV: production
@@ -11,5 +11,5 @@ build:
     YOUTUBE_API_KEY: AIzaSyCbGOVYjQdTGOn_xfi49fL0aqWZyDyKmCc
 
 run:
-  # api: npm run server
+  api: npm run server
   ui: npm start
