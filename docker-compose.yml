@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  # gateway:
+  #   image: gateway
+  #   build: ./docker/gateway
+  #   volumes:
+  #     - ./docker/gateway/Caddyfile:/etc/Caddyfile
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+
+  # api:
+  #   build:
+  #     context: ./packages/api
+  #     dockerfile: Dockerfile
+  #   env_file: .env
+  #   command: npm run server
+  #   volumes:
+  #     - /usr/src/app/node_modules
+  #     - ./packages/api:/usr/src/app/
+
+  ui:
+    build:
+      context: ./packages/ui
+      dockerfile: Dockerfile.dev
+    env_file: .env
+    command: npm start
+    volumes:
+      - /app/node_modules
+      - ./packages/ui:/app
+    stdin_open: true
