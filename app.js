@@ -53,6 +53,10 @@ if (process.env.NODE_ENV === "production") {
   app.get("*", (req, res, next) => {
     res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
   });
+
+  app.get("/api/status", (req, res, next) => {
+    return res.json({ message: "RUNNING" });
+  });
 }
 
 app.use(logger("dev"));
