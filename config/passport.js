@@ -9,23 +9,28 @@ module.exports = (passport) => {
       try {
         const user = await GetUserByUsername(username);
 
+        console.log("user", user);
+
         if (!user || user == undefined) {
           throw "User does not exist";
         }
 
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) {
+            console.log("bcrypt", err);
             return err;
           }
           if (isMatch) {
             return done(null, user);
           } else {
+            console.log("Incorrect Username or Password");
             return done(null, false, {
               message: "Incorrect Username or Password",
             });
           }
         });
       } catch (error) {
+        console.log("no user", user);
         return done(null, false, { message: error });
       }
     })
