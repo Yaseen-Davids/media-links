@@ -24,7 +24,6 @@ router.post("/login", async (req, res, next) => {
         throw new Error(err);
       }
       if (!user) {
-        console.log("user", users);
         console.log("Username or password is incorrect");
         throw new Error("Username or password is incorrect");
       }
