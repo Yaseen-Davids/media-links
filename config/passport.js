@@ -7,6 +7,13 @@ module.exports = (passport) => {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
+        console.log("username", username);
+        console.log("password", password);
+
+        bcrypt.hash(passwor, salt, async (error, hash) => {
+          console.log("hash", hash);
+        });
+
         const user = await GetUserByUsername(username);
 
         console.log("user", user);
