@@ -50,9 +50,10 @@ app.set("view engine", "ejs");
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "ui", "build")));
 
-  app.get("/api", (req, res, next) => {
-    return res.json({ status: "API RUNNING" });
-  })
+  app.use("/api/", indexRouter);
+  app.use("/api/users", usersRouter);
+  app.use("/api/youtube", youtubeRouter);
+  app.use("/api/playlists", playlistRouter);
 
   app.get("*", (req, res, next) => {
     res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
