@@ -1,0 +1,38 @@
+# Docker
+# Build a Docker image 
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+- main
+
+resources:
+- repo: self
+
+variables:
+  tag: '$(Build.BuildId)'
+  uiSource: './packages/ui'
+  apiSource: './packages/api'
+
+stages:
+- stage: Build
+  displayName: Build image
+  jobs:  
+  - job: Build 
+    displayName: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: Docker@2
+      displayName: Build ui
+      inputs:
+        command: build
+        dockerfile: '$(uiSource)/Dockerfile.dev'
+        tags: |
+          $(tag)
+    - task: Docker@2
+      displayName: Build api
+      inputs:
+        command: build
+        dockerfile: '$(apiSource)/Dockerfile'
+        tags: |
+          $(tag)
