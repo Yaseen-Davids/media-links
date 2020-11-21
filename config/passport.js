@@ -18,7 +18,7 @@ module.exports = (passport) => {
 
         console.log("user", user);
 
-        if (!user || user == undefined) {
+        if (!user) {
           throw "User does not exist";
         }
 

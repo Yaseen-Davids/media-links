@@ -13,11 +13,7 @@ const GetUserByUsername = async (username) => {
 
 const GetUserById = async (id) =>
   await knex("users")
-    .first({
-      id: "id",
-      username: "username",
-      email: "email",
-    })
+    .first({ id: "id", username: "username", email: "email" })
     .where("id", id);
 
 const CreateUser = async (person) => {
