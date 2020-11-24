@@ -45,7 +45,7 @@ app.use(passport.session());
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-// app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "ui", "build")));
@@ -57,10 +57,6 @@ if (process.env.NODE_ENV === "production") {
 
   app.get("*", (req, res, next) => {
     res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
-  });
-
-  app.get("/api/status", (req, res, next) => {
-    return res.json({ message: "RUNNING" });
   });
 }
 
