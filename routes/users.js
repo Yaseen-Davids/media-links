@@ -18,26 +18,20 @@ router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
 
 router.post("/login", async (req, res, next) => {
   passport.authenticate("local", (err, user) => {
-    console.log("login neweerr", err);
-    console.log("login user", user);
     try {
       if (err) {
-        console.log("login err::::", err);
         throw new Error(err);
       }
       if (!user) {
-        console.log("login err:::: Username or password is incorrect");
         throw new Error("Username or password is incorrect");
       }
       req.logIn(user, (error) => {
         if (error) {
-          console.log("login error::::", error);
           throw new Error(error);
         }
         return res.send();
       });
     } catch (error) {
-      console.log("login 12 error::::", error);
       return next(error);
     }
   })(req, res, next);
