@@ -7,6 +7,8 @@ module.exports = (passport) => {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
+        console.log("PASSPORT STRATEGY");
+
         const user = await GetUserByUsername(username);
 
         console.log("passport user::: ", user);
