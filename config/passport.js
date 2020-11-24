@@ -7,25 +7,37 @@ module.exports = (passport) => {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
+        console.log("username", username);
+        console.log("password", password);
+
+        bcrypt.hash(passwor, salt, async (error, hash) => {
+          console.log("hash", hash);
+        });
+
         const user = await GetUserByUsername(username);
 
-        if (!user || user == undefined) {
+        console.log("user", user);
+
+        if (!user) {
           throw "User does not exist";
         }
 
         bcrypt.compare(password, user.password, (err, isMatch) => {
           if (err) {
+            console.log("bcrypt", err);
             return err;
           }
           if (isMatch) {
             return done(null, user);
           } else {
+            console.log("Incorrect Username or Password");
             return done(null, false, {
               message: "Incorrect Username or Password",
             });
           }
         });
       } catch (error) {
+        console.log("no user", user);
         return done(null, false, { message: error });
       }
     })

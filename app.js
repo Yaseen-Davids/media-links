@@ -50,6 +50,11 @@ app.set("view engine", "ejs");
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "ui", "build")));
 
+  app.use("/api/", indexRouter);
+  app.use("/api/users", usersRouter);
+  app.use("/api/youtube", youtubeRouter);
+  app.use("/api/playlists", playlistRouter);
+
   app.get("*", (req, res, next) => {
     res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
   });
@@ -64,10 +69,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser("secret"));
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/youtube", youtubeRouter);
-app.use("/playlists", playlistRouter);
+app.use("/api/", indexRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/youtube", youtubeRouter);
+app.use("/api/playlists", playlistRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));

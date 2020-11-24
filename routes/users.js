@@ -20,18 +20,22 @@ router.post("/login", async (req, res, next) => {
   passport.authenticate("local", function (err, user) {
     try {
       if (err) {
+        console.log("err", err);
         throw new Error(err);
       }
       if (!user) {
+        console.log("Username or password is incorrect");
         throw new Error("Username or password is incorrect");
       }
       req.logIn(user, function (error) {
         if (error) {
+          console.log("error", error);
           throw new Error(error);
         }
         return res.send();
       });
     } catch (error) {
+      console.log("login error", error);
       return next(error);
     }
   })(req, res, next);

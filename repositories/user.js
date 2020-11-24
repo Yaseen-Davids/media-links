@@ -3,19 +3,17 @@ const bcrypt = require("bcryptjs");
 
 const GetUserByUsername = async (username) => {
   try {
+    console.log("username", username);
     return await knex("users").first("*").where("username", username);
   } catch (error) {
+    console.log("GetUserByUsername error", error);
     return error;
   }
 };
 
 const GetUserById = async (id) =>
   await knex("users")
-    .first({
-      id: "id",
-      username: "username",
-      email: "email",
-    })
+    .first({ id: "id", username: "username", email: "email" })
     .where("id", id);
 
 const CreateUser = async (person) => {
