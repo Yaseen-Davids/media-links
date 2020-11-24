@@ -17,7 +17,7 @@ router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
 });
 
 router.post("/login", async (req, res, next) => {
-  passport.authenticate("local", function (err, user) {
+  passport.authenticate("local", (err, user) => {
     try {
       if (err) {
         throw new Error(err);
@@ -25,7 +25,7 @@ router.post("/login", async (req, res, next) => {
       if (!user) {
         throw new Error("Username or password is incorrect");
       }
-      req.logIn(user, function (error) {
+      req.logIn(user, (error) => {
         if (error) {
           throw new Error(error);
         }

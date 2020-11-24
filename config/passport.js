@@ -9,7 +9,7 @@ module.exports = (passport) => {
       try {
         const user = await GetUserByUsername(username);
 
-        if (!user || user == undefined) {
+        if (!user) {
           throw "User does not exist";
         }
 

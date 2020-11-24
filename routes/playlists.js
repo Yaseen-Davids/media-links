@@ -18,7 +18,6 @@ router.post("/create", ensureAuthenticated, async (req, res, next) => {
     const data = await createPlaylist(req.body);
     return res.json({ data });
   } catch (error) {
-    console.log("error => ", error);
     return next(error);
   }
 });
