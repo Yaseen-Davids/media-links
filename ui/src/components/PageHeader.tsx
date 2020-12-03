@@ -29,7 +29,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ }) => {
 
   const handleLogout = () => {
     logout();
-    history.push("/");
+    history.go(0); // refresh page
   }
 
   useEffect(() => {
