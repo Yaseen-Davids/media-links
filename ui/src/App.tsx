@@ -12,6 +12,7 @@ import { PlaylistProvider } from "./contexts/PlaylistContext";
 import { Playlists } from "./pages/Playlists";
 import { LoginProvider } from "./contexts/LoginContext";
 import { PageHeader } from "./components/PageHeader";
+import { PermissionsProvider } from "./contexts/PermissionsContext";
 
 const shouldLoad = (loading: Loading) => {
   return !loading.loading && !loading.loaded && !loading.error;
@@ -48,27 +49,29 @@ const App: FC = () => {
             render={() => (
               <Switch>
                 <Route path="/login" component={Login} />
-                <Container>
-                  <PageHeader />
-                  <Content>
-                    <Route path="/" exact>
-                      <PlaylistProvider>
-                        <Container>
-                          <Playlists />
-                        </Container>
-                      </PlaylistProvider>
-                    </Route>
-                    <Route path="/:playlistId/:mediaId?">
-                      <SnackbarProvider>
-                        <LinksProvider>
-                          <div className="main-container">
-                            <LinksContent />
-                          </div>
-                        </LinksProvider>
-                      </SnackbarProvider>
-                    </Route>
-                  </Content>
-                </Container>
+                <PlaylistProvider>
+                  <PermissionsProvider>
+                    <Container>
+                      <PageHeader />
+                      <Content>
+                        <Route path="/" exact>
+                          <Container>
+                            <Playlists />
+                          </Container>
+                        </Route>
+                        <Route path="/:playlistId/:mediaId?">
+                          <SnackbarProvider>
+                            <LinksProvider>
+                              <div className="main-container">
+                                <LinksContent />
+                              </div>
+                            </LinksProvider>
+                          </SnackbarProvider>
+                        </Route>
+                      </Content>
+                    </Container>
+                  </PermissionsProvider>
+                </PlaylistProvider>
               </Switch>
             )}
           />

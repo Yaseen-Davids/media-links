@@ -110,7 +110,7 @@ export const LinksProvider: React.FC = ({ children }) => {
   }, [reload, sort, downloadState]);
 
   useEffect(() => {
-    if (history.location.search.includes("login=false")) {
+    if (history.location.search.includes("loggedin=false")) {
       toggleFilters(true);
     }
   }, [history.location]);

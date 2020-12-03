@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createPlaylist, getPlaylistByUser } = require("../repositories/playlists");
+const { createPlaylist, getPlaylistByUser, getPlaylistByPlaylistId, updateCurrentPlaylist, deletePlaylistById } = require("../repositories/playlists");
 const { ensureAuthenticated } = require("../repositories/base");
 
 router.get("/:userId", ensureAuthenticated, async (req, res, next) => {
@@ -17,6 +17,33 @@ router.post("/create", ensureAuthenticated, async (req, res, next) => {
   try {
     const data = await createPlaylist(req.body);
     return res.json({ data });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.get("/single/:playlistId", async (req, res, next) => {
+  try {
+    const data = await getPlaylistByPlaylistId(req.params.playlistId);
+    return res.json({ data });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.post("/update/:playlistId", ensureAuthenticated, async (req, res, next) => {
+  try {
+    const data = await updateCurrentPlaylist(req.params.playlistId, req.body);
+    return res.json({ data });
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.delete("/delete/:playlistId", ensureAuthenticated, async (req, res, next) => {
+  try {
+    await deletePlaylistById(req.params.playlistId);
+    return res.send();
   } catch (error) {
     return next(error);
   }

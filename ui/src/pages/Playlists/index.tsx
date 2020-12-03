@@ -41,7 +41,12 @@ export const Playlists = () => {
               {loading.loading && <PlaylistLoader active inline />}
             </PlaylistHeaderText>
             <PlaylistLayout>
-              {(playlists || []).map((playlist) => <PlaylistCard title={playlist.name} onClick={() => handleOpenPlaylist(playlist)} />)}
+              {(playlists || []).map((playlist) => (
+                <PlaylistCard
+                  title={playlist.name}
+                  onClick={() => handleOpenPlaylist(playlist)}
+                />
+              ))}
               <CreatePlaylistCard />
             </PlaylistLayout>
           </PlaylistSection>
@@ -56,9 +61,7 @@ const Content = styled.div`
   display: grid;
   background-color: #111;
   overflow-y: auto;
-  @media (max-width: 850px) and (min-width: 1px) {
-    margin-bottom: 50px;
-  }
+  margin-bottom: 50px;
 `;
 
 const ContentWrapper = styled.div`

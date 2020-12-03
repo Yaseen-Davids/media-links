@@ -12,7 +12,7 @@ export const checkLogin = async (setLoggedIn: any, history: any) => {
     }
     setLoggedIn(true);
   } catch (e) {
-    history.push("?login=false");
+    history.push("?loggedin=false");
     setLoggedIn(false);
   }
 }

@@ -1,16 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import styled from "styled-components";
-import { MediaLinks } from "../../models/media-links";
-import { Card } from "../../components/Card";
+
 import { CreateLink } from "./CreateLink";
 import { Filters } from "./Filters";
-import { LinksContext } from "../../contexts/LinksContext";
-import { Loading } from "../../components/Loading";
 import { VideoPlayer } from "./VideoPlayer";
 import { ControlActions } from "./ControlActions";
-import { MediaPlayerProvider } from "../../contexts/MediaPlayerContext";
+
+import { Card } from "../../components/Card";
 import { ProgressBar } from "../../components/ProgressBar";
-import { LoginContext } from "../../contexts/LoginContext";
+import { Loading } from "../../components/Loading";
+
+import { LinksContext } from "../../contexts/LinksContext";
+import { MediaPlayerProvider } from "../../contexts/MediaPlayerContext";
+import { PermissionsContext } from "../../contexts/PermissionsContext";
+
+import { MediaLinks } from "../../models/media-links";
 
 type LinksContentProps = {};
 
@@ -89,8 +93,9 @@ const Controls = styled.div`
 
 export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
   const { loading, links } = useContext(LinksContext);
+  const { canCreateMediaLink } = useContext(PermissionsContext);
+
   const [dataLoading, setDataLoading] = useState(true);
-  const { loggedIn } = useContext(LoginContext);
 
   useEffect(() => {
     if (dataLoading) {
@@ -108,7 +113,7 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
         </Content>
         <VideoPlayerContent>
           <HeaderActionsWrapper>
-            {loggedIn && (
+            {canCreateMediaLink && (
               <CreateLink />
             )}
             <Filters />

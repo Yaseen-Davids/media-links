@@ -16,7 +16,7 @@ export const LoginProvider: React.FC = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
 
   useEffect(() => {
-    if (history.location.search.includes("login=false")) {
+    if (history.location.search.includes("loggedin=false")) {
       setLoggedIn(false);
     }
   }, [history.location]);
