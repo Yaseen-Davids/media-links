@@ -59,9 +59,6 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ }) => {
 
   const handleLoginRedirect = () => {
     history.push(`/login`);
-    // const currentUrl = window.location.href;
-    // const redirectUrl = currentUrl.replace("/?loggedin=false", "/");
-    // history.push(`/login?loggedin=false&redirectUrl=${redirectUrl}`);
   }
 
   return (
