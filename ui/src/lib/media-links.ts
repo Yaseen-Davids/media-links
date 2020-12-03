@@ -3,7 +3,7 @@ import { MediaLinks } from "../models/media-links";
 
 export const getAllMediaLinks = async (playlistId: string, obj: { sort: { column: string; order: string }; downloadState: { downloaded: number } }): Promise<MediaLinks[]> => {
   try {
-    const resp = await axios.post(`/youtube/all/${playlistId}`, obj);
+    const resp = await axios.post(`/api/youtube/all/${playlistId}`, obj);
 
     if (resp.status > 300 || resp.status < 200) {
       throw "Error getting YouTube links.";
@@ -22,11 +22,11 @@ type Link = {
   playlistId: string;
 };
 
-export const createMediaLink = async (body: Link) => await axios.post("/youtube/create", body);
+export const createMediaLink = async (body: Link) => await axios.post("/api/youtube/create", body);
 
 export const deleteMediaLink = async (id: string) => {
   try {
-    const resp = await axios.delete(`/youtube/delete/${id}`);
+    const resp = await axios.delete(`/api/youtube/delete/${id}`);
 
     if (resp.status > 300 || resp.status < 200) {
       throw "Error deleting YouTube link.";

@@ -66,10 +66,10 @@ if (process.env.NODE_ENV === "production") {
 
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api/", indexRouter);
-app.use("/api/users", usersRouter);
-app.use("/api/youtube", youtubeRouter);
-app.use("/api/playlists", playlistRouter);
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
+app.use("/youtube", youtubeRouter);
+app.use("/playlists", playlistRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));
