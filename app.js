@@ -5,20 +5,11 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const passport = require("passport");
-// const session = require("express-session");
-// const redis = require("redis");
-// const RedisStore = require("connect-redis")(session);
 
-// const redisClient = redis.createClient(
-//   process.env.NODE_ENV === "production"
-//     ? { host: process.env.REDIS_URL }
-//     : {
-//         host: "127.0.0.1",
-//         port: 6379,
-//         prefix: "sess",
-//         pass: "passwordtoredis",
-//       }
-// );
+const session = require("express-session");
+const redis = require("redis");
+const RedisStore = require("connect-redis")(session);
+const redisClient = redis.createClient(process.env.REDIS_URL);
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
@@ -29,9 +20,9 @@ const app = express();
 
 app.use(
   require("express-session")({
-    // store: new RedisStore({
-    //   client: redisClient,
-    // }),
+    store: new RedisStore({
+      client: redisClient,
+    }),
     secret: "secret",
     resave: false,
     saveUninitialized: false,

@@ -1,9 +1,11 @@
 import React, { useContext, useState } from "react";
-import styled from "styled-components";
-import { Input, Button } from "semantic-ui-react";
-import { Form, Field } from "react-final-form";
+
 import { login } from "../../lib/user";
 import { UserContext } from "../../contexts/UserContext";
+
+import { Form, Field } from "react-final-form";
+import { Input, Button } from "semantic-ui-react";
+import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
 export const Login = () => {
@@ -44,7 +46,7 @@ export const Login = () => {
                     validate={validate}
                     render={({ meta, input }) => (
                       <FieldContainer>
-                        <label>Username: </label>
+                        <label>Username</label>
                         <Input {...input} placeholder="Username" fluid />
                         {meta.error && meta.touched ? <span className="validate-error">Please enter a username</span> : <></>}
                       </FieldContainer>
@@ -56,7 +58,7 @@ export const Login = () => {
                     validate={validate}
                     render={({ meta, input }) => (
                       <FieldContainer>
-                        <label>Password: </label>
+                        <label>Password</label>
                         <Input {...input} placeholder="Password" fluid />
                         {meta.error && meta.touched ? <span className="validate-error">Please enter a password</span> : <></>}
                       </FieldContainer>
