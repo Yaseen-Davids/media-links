@@ -9,9 +9,9 @@ export const sortOptions: {
   sortTitleDescending: { column: "title", order: "desc" },
 };
 
-export const downloadStateOptions: {
-  [index: string]: { downloaded: number };
+export const linkStateOptions: {
+  [index: string]: { removed: number };
 } = {
-  active: { downloaded: 0 },
-  removed: { downloaded: 1 },
+  active: { removed: 0 },
+  removed: { removed: 1 },
 };

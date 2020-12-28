@@ -3,7 +3,7 @@ const knex = require("../knex");
 
 module.exports = {
   createMediaLink: async (item) => {
-    const { url, type, userId, playlistId } = item;
+    const { url, userId, playlistId } = item;
 
     if (!url || url.length <= 0) {
       throw "URL no specified";
@@ -14,14 +14,14 @@ module.exports = {
     const [linkId] = await knex("media_links")
       .insert({
         title: result.title,
-        type: type || "",
         thumbnail_url: result.thumbnail_url,
         author_url: url,
-        downloaded: 0,
+        removed: 0,
         user_id: userId,
         date_added: new Date(),
         provided_name: result.provider_name,
         playlist_id: playlistId,
+        author_name: result.author_name,
       })
       .returning("id");
 
@@ -29,13 +29,12 @@ module.exports = {
   },
   getAllMediaLinks: async (obj, playlistId) => {
     const sort = obj.sort || { column: "date_added", order: "desc" };
-    const downloadState = obj.downloadState || { downloaded: 0 };
-    // const userId = obj.userId || 0;
+    const linkState = obj.linkState || { removed: 0 };
 
-    return await knex("media_links").select("*").where(downloadState).where("playlist_id", playlistId).orderBy([sort]);
+    return await knex("media_links").select("*").where(linkState).where("playlist_id", playlistId).orderBy([sort]);
   },
   deleteMediaLink: async (id) => {
-    return await knex("media_links").update("downloaded", 1).where("id", id);
+    return await knex("media_links").update("removed", 1).where("id", id);
   },
 };
 

@@ -111,11 +111,11 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ }) => {
               )}
               {!userLoading.loading && userLoading.loaded ? (
                 !isLoggedIn ? (
-                  <Dropdown.Item icon="arrow right" text="Login" onClick={handleLoginRedirect} />
+                  <DropdownItem icon="arrow right" text="Login" onClick={handleLoginRedirect} />
                 ) : (
-                    <Dropdown.Item icon="arrow left" text="Logout" onClick={handleLogout} />
+                    <DropdownItem icon="arrow left" text="Logout" onClick={handleLogout} />
                   )) : (
-                  <Dropdown.Item icon="arrow right" text="Login" onClick={handleLoginRedirect} />
+                  <DropdownItem icon="arrow right" text="Login" onClick={handleLoginRedirect} />
                 )}
             </Dropdown.Menu>
           </DropdownSelect>
@@ -219,5 +219,11 @@ const EditInput = styled.input`
     &:disabled {
       opacity: 1;
     }
+  }
+`;
+
+const DropdownItem = styled(Dropdown.Item)`
+  &&&& {
+    width: 150px;
   }
 `;

@@ -52,7 +52,7 @@ const DropdownSelect = styled(Dropdown)`
 type FiltersProps = {};
 
 export const Filters: FC<FiltersProps> = () => {
-  const { sort, setSort, downloadState, setDownloadState, setLocalStorageOptions, showFilters } = useContext(LinksContext);
+  const { sort, setSort, linkState, setLinkState, setLocalStorageOptions, showFilters } = useContext(LinksContext);
 
   const sortOptions = [
     { key: 1, text: "Sort date ascending", value: "sortDateAscending", icon: "arrow up" },
@@ -78,11 +78,11 @@ export const Filters: FC<FiltersProps> = () => {
 
   const handleStateChange = (changes: any) => {
     if (changes.length <= 0) {
-      setDownloadState("active");
-      setLocalStorageOptions("downloadState", "active");
+      setLinkState("active");
+      setLocalStorageOptions("linkState", "active");
     } else {
-      setDownloadState(changes);
-      setLocalStorageOptions("downloadState", changes);
+      setLinkState(changes);
+      setLocalStorageOptions("linkState", changes);
     }
   };
 
@@ -103,7 +103,7 @@ export const Filters: FC<FiltersProps> = () => {
             <DropdownSelect
               fluid
               selection
-              value={downloadState}
+              value={linkState}
               closeOnChange
               placeholder="State"
               options={stateOptions}

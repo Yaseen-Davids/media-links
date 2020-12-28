@@ -30,17 +30,30 @@ const CardTitleWrapper = styled.div`
 const CardTitle = styled.div`
   grid-area: title;
   display: grid;
-  grid-template-columns: 90px 1fr;
-  grid-gap: 10px;
+  grid-template-columns: 70px 1fr;
+  grid-template-areas: "img title"
+                       "img author";
+  grid-column-gap: 10px;
   text-align: left;
   color: #d4d4d4;
   img {
-    height: 70px;
-    width: 90px;
+    grid-area: img;
+    height: 50px;
+    width: 70px;
   }
-  p {
+  .link_title {
+    grid-area: title;
+    margin-bottom: 0;
     padding-top: 5px;
-    padding-bottom: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .link_author_name {
+    grid-area: author;
+    margin-bottom: 0;
+    color: #666;
+    font-size: 12px;
   }
   @media (max-width: 850px) and (min-width: 1px) {
     font-size: 11px;
@@ -104,6 +117,12 @@ const DropdownSelect = styled(Dropdown)`
   }
 `;
 
+const DropdownItem = styled(Dropdown.Item)`
+  &&&& {
+    width: 150px;
+  }
+`;
+
 type CardProps = {
   link: MediaLinks;
 };
@@ -137,7 +156,8 @@ export const Card: React.FC<CardProps> = ({ link }) => {
       <CardTitleWrapper>
         <CardTitle onClick={handlePlayVideo}>
           <img src={link.thumbnail_url} />
-          <p>{link.title}</p>
+          <p className="link_title" title={link.title}>{link.title}</p>
+          <p className="link_author_name" title={link.author_name}>{link.author_name}</p>
         </CardTitle>
         <CardButtons>
           <DropdownSelect
@@ -145,9 +165,9 @@ export const Card: React.FC<CardProps> = ({ link }) => {
             direction="left"
           >
             <Dropdown.Menu style={{ zIndex: 100000 }}>
-              <Dropdown.Item icon="copy" text="Copy link" onClick={() => handleCopyUrl(link.author_url)} />
+              <DropdownItem icon="copy" text="Copy link" onClick={() => handleCopyUrl(link.author_url)} />
               {loggedIn && (
-                <Dropdown.Item icon="trash" text="Delete" onClick={() => handleDeleteLink(link.id)} />
+                <DropdownItem icon="trash" text="Delete" onClick={() => handleDeleteLink(link.id)} />
               )}
             </Dropdown.Menu>
           </DropdownSelect>
