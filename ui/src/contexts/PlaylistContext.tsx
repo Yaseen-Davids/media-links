@@ -14,6 +14,7 @@ export type PlaylistContextState = {
   currentPlaylist: Playlist;
   playlists: Playlist[];
   currentPlaylistLoading: Loading;
+  deletingPlaylist: boolean;
   hydrateCurrentPlaylist(playlistId: string): void;
   handleUpdateCurrentPlaylist(data: any): void;
   handleDeletePlaylist(id?: any): void;
@@ -21,6 +22,7 @@ export type PlaylistContextState = {
 
 export const PlaylistContext = createContext<PlaylistContextState>({
   playlists: [],
+  deletingPlaylist: false,
   currentPlaylist: { id: "", date_added: null, name: "", user_id: 0 },
   loading: { loading: false, loaded: false, error: null },
   currentPlaylistLoading: { loading: false, loaded: false, error: null },
@@ -36,6 +38,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   const [playlists, setPlaylists] = useState<any>([]);
   const [currentPlaylistLoading, setCurrentPlaylistLoading] = useState<Loading>(defaultLoading);
   const [currentPlaylist, setCurrentPlaylist] = useState({ id: "", date_added: null, name: "", user_id: 0 });
+  const [deletingPlaylist, setDeletingPlaylist] = useState<boolean>(false);
 
   const match = useRouteMatch<any>({ path: "/:playlistId/:videoId?" });
 
@@ -72,7 +75,11 @@ export const PlaylistProvider: React.FC = ({ children }) => {
         error: null,
       });
       const result = await getCurrentPlaylistById(playlistId);
-      setCurrentPlaylist(result.data.data);
+      if (result.data.data) {
+        setCurrentPlaylist(result.data.data);
+      } else {
+        throw "Cannot find playlist.";
+      }
       setCurrentPlaylistLoading({
         loading: false,
         loaded: true,
@@ -94,10 +101,17 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   }
 
   const handleDeletePlaylist = async (id = undefined) => {
-    if (id) {
-      await deletePlaylistById(id);
-    } else {
-      await deletePlaylistById(currentPlaylist.id);
+    try {
+      setDeletingPlaylist(true);
+      const playlistId = id ? id : currentPlaylist.id;
+
+      // delete playlist
+      await deletePlaylistById(playlistId);
+
+    } catch (error) {
+      openSnackbar("Error deleting playlist");
+    } finally {
+      setDeletingPlaylist(false);
     }
   }
 
@@ -122,7 +136,8 @@ export const PlaylistProvider: React.FC = ({ children }) => {
     hydrateCurrentPlaylist,
     handleDeletePlaylist,
     handleUpdateCurrentPlaylist,
-  }), [loading, currentPlaylistLoading, currentPlaylist, playlists]);
+    deletingPlaylist,
+  }), [loading, currentPlaylistLoading, currentPlaylist, playlists, deletingPlaylist]);
 
   return (
     <PlaylistContext.Provider value={value}>{children}</PlaylistContext.Provider>

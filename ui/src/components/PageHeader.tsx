@@ -13,13 +13,12 @@ type PageHeaderProps = {};
 export const PageHeader: React.FC<PageHeaderProps> = ({ }) => {
   const { loggedIn } = useContext(LoginContext);
   const { loading: userLoading } = useContext(UserContext);
-  const { currentPlaylist, handleUpdateCurrentPlaylist, handleDeletePlaylist } = useContext(PlaylistContext);
+  const { currentPlaylist, handleUpdateCurrentPlaylist, handleDeletePlaylist, deletingPlaylist } = useContext(PlaylistContext);
   const { canCreateMediaLink } = useContext(PermissionsContext);
 
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [playlistName, setPlaylistName] = useState<string>("");
   const [deletePlaylistConfirm, setDeletePlaylistConfirm] = useState<boolean>(false);
-  const [deletingPlaylist, setDeletingPlaylist] = useState<boolean>(false);
 
   const history = useHistory();
 
@@ -45,16 +44,9 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ }) => {
   }
 
   const handleConfirmDeletePlaylist = async () => {
-    try {
-      setDeletingPlaylist(true);
-      await handleDeletePlaylist();
-      setDeletePlaylistConfirm(false);
-      setDeletingPlaylist(false);
-      history.push("/");
-    } catch (error) {
-      setDeletingPlaylist(false);
-      console.log("Error deleting playlist:: ", error);
-    }
+    await handleDeletePlaylist();
+    setDeletePlaylistConfirm(false);
+    history.push("/");
   }
 
   const handleLoginRedirect = () => {

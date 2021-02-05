@@ -1,10 +1,12 @@
 import React, { useContext, useRef, useState } from "react";
+
 import styled from "styled-components";
 import { Icon, Input, Button } from "semantic-ui-react";
 import { Form, Field } from "react-final-form";
+import { useHistory } from "react-router-dom";
+
 import { UserContext } from "../contexts/UserContext";
 import { createPlaylist } from "../lib/playlists";
-import { useHistory } from "react-router-dom";
 
 type CreatePlaylistCardProps = {};
 
@@ -30,7 +32,7 @@ export const CreatePlaylistCard: React.FC<CreatePlaylistCardProps> = ({ }) => {
                 setLoading(true);
                 try {
                   const id = await createPlaylist({ ...fields, user_id: user.id });
-                  history.push(id.data.data[0]);
+                  history.push(`${id.data.data[0]}/`);
                 } catch (error) {
                   console.log("error", error);
                 } finally {
