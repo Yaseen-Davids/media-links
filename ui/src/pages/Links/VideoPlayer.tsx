@@ -1,9 +1,12 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import ReactPlayer from "react-player";
-import styled from "styled-components";
+
 import { LinksContext } from "../../contexts/LinksContext";
 import { MediaPlayerContext } from "../../contexts/MediaPlayerContext";
+
 import BigNumber from "bignumber.js";
+import ReactPlayer from "react-player";
+import styled from "styled-components";
+import { useSnackbar } from "react-simple-snackbar";
 
 const Container = styled.div`
   position: relative;
@@ -29,6 +32,8 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
   const { playing, autoplay, volume, seek, duration, setDuration, setProgress, setPlaying, playVideoByCurrent, loop } = useContext(MediaPlayerContext);
 
   const [ended, setEnded] = useState<boolean>(false);
+
+  const [openSnackbar] = useSnackbar();
 
   const ref: any = useRef();
 
@@ -71,6 +76,11 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
     }
   }, [currentVideo]);
 
+  const handleSkipUnavailable = () => {
+    playVideoByCurrent(currentVideo, 1);
+    openSnackbar("Skipping Unavailable");
+  }
+
   return (
     <Container>
       <VideoWrapper>
@@ -78,6 +88,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
           ref={ref}
           volume={volume}
           playing={playing}
+          onError={handleSkipUnavailable}
           url={currentVideo.author_url}
           className="react-video-player"
           onEnded={() => setEnded(true)}
