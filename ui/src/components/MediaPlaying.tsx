@@ -7,7 +7,7 @@ export const MediaPlaying = () => {
 
   return (
     <Container>
-      {currentVideo.title.length > 0 ? (
+      {currentVideo && currentVideo.title.length > 0 ? (
         <CardTitleWrapper>
           <CardTitle>
             <img src={currentVideo.thumbnail_url} />

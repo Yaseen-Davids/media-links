@@ -1,11 +1,14 @@
 import React, { useState, useContext } from "react";
-import styled from "styled-components";
-import { Input, Button, Icon } from "semantic-ui-react";
-import { Form, Field } from "react-final-form";
+
 import { LinksContext } from "../../contexts/LinksContext";
 import { createMediaLink } from "../../lib/media-links";
 import { UserContext } from "../../contexts/UserContext";
+
+import styled from "styled-components";
+import { Input, Button, Icon } from "semantic-ui-react";
+import { Form, Field } from "react-final-form";
 import { useRouteMatch } from "react-router-dom";
+import { useSnackbar } from "react-simple-snackbar";
 
 const Container = styled.div`
   font-size: 12px;
@@ -35,11 +38,16 @@ const FormInput = styled.input`
 type CreateLinkProps = {};
 
 export const CreateLink: React.FC<CreateLinkProps> = () => {
-  const { setLinks, links, toggleFilters, showFilters } = useContext(LinksContext);
-  const [loading, setLoading] = useState<boolean>(false);
-  const required = (value: any) => value ? undefined : "Please enter a YouTube link.";
-  const { user } = useContext(UserContext);
   const match = useRouteMatch<any>({ path: "/:playlistId/:videoId?" });
+
+  const { setLinks, links, toggleFilters, showFilters } = useContext(LinksContext);
+  const { user } = useContext(UserContext);
+
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const required = (value: any) => value ? undefined : "Please enter a YouTube link.";
+
+  const [openSnackbar] = useSnackbar();
 
   return (
     <Container>
@@ -56,7 +64,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
             links.splice(0, 0, data.data);
             setLinks([...links]);
           } catch (e) {
-            alert(e);
+            openSnackbar("Cannot find YouTube link.");
           } finally {
             setLoading(false);
           }
@@ -93,7 +101,7 @@ export const CreateLink: React.FC<CreateLinkProps> = () => {
                 size="small"
                 onClick={() => toggleFilters(!showFilters)}
               >
-                <Icon name="filter" />
+                <Icon name="sliders horizontal" />
               </Button>
             </Input>
           </FormContainer>

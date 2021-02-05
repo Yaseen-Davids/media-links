@@ -27,7 +27,9 @@ type VideoPlayerProps = {};
 export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
   const { currentVideo } = useContext(LinksContext);
   const { playing, autoplay, volume, seek, duration, setDuration, setProgress, setPlaying, playVideoByCurrent, loop } = useContext(MediaPlayerContext);
+
   const [ended, setEnded] = useState<boolean>(false);
+
   const ref: any = useRef();
 
   const handleAutoPlay = () => {
@@ -59,6 +61,15 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
       setPlaying(true);
     }
   }, [seek]);
+
+  useEffect(() => {
+    if (!currentVideo || currentVideo.id == "") {
+      setProgress(0);
+      setDuration(0);
+      ref.current.seekTo(0);
+      setPlaying(false);
+    }
+  }, [currentVideo]);
 
   return (
     <Container>

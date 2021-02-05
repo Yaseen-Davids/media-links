@@ -46,6 +46,7 @@ export const MediaPlayerContext = createContext<MediaPlayerState>({
 
 export const MediaPlayerProvider: React.FC = ({ children }) => {
   const { links, currentVideo, setCurrentVideo, localStorageOptions } = useContext(LinksContext);
+
   const [loading, setLoading] = useState<Loading>(defaultLoading);
   const [playing, setPlaying] = useState<boolean>(false);
   const [autoplay, setAutoplay] = useState<boolean>(localStorageOptions.autoplay || false);
@@ -54,6 +55,7 @@ export const MediaPlayerProvider: React.FC = ({ children }) => {
   const [duration, setDuration] = useState<number>(0);
   const [seek, seekTo] = useState<number | null>(null);
   const [loop, setLoop] = useState<boolean>(false);
+
   const history = useHistory();
 
   const playVideoByCurrent = async (currentVideo: MediaLinks, index: number) => {

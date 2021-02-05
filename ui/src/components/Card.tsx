@@ -5,7 +5,7 @@ import { MediaLinks } from "../models/media-links";
 import { deleteMediaLink } from "../lib/media-links";
 import { LinksContext } from "../contexts/LinksContext";
 import { MediaPlayerContext } from "../contexts/MediaPlayerContext";
-import { useHistory } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { LoginContext } from "../contexts/LoginContext";
 
 const CardContainer = styled.div`
@@ -128,17 +128,11 @@ type CardProps = {
 };
 
 export const Card: React.FC<CardProps> = ({ link }) => {
-  const { links, setLinks, currentVideo } = useContext(LinksContext);
   const { setDuration, setProgress, setPlaying } = useContext(MediaPlayerContext);
-  const history = useHistory();
+  const { currentVideo, handleDeleteLinkById } = useContext(LinksContext);
   const { loggedIn } = useContext(LoginContext);
 
-  const handleDeleteLink = async (id: string) => {
-    await deleteMediaLink(id);
-    const linkIndex = links.findIndex(link => link.id === id);
-    links.splice(linkIndex, 1);
-    setLinks([...links]);
-  };
+  const history = useHistory();
 
   const handlePlayVideo = () => {
     setPlaying(true);
@@ -167,7 +161,7 @@ export const Card: React.FC<CardProps> = ({ link }) => {
             <Dropdown.Menu style={{ zIndex: 100000 }}>
               <DropdownItem icon="copy" text="Copy link" onClick={() => handleCopyUrl(link.author_url)} />
               {loggedIn && (
-                <DropdownItem icon="trash" text="Delete" onClick={() => handleDeleteLink(link.id)} />
+                <DropdownItem icon="trash" text="Delete" onClick={() => handleDeleteLinkById(link.id)} />
               )}
             </Dropdown.Menu>
           </DropdownSelect>

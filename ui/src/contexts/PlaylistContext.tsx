@@ -1,10 +1,13 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+
 import { defaultLoading } from "../models/loading";
 import { Loading } from "../models/base";
 import { deletePlaylistById, getCurrentPlaylistById, getPlaylistsByUser, updateCurrentPlaylistById } from "../lib/playlists";
 import { Playlist } from "../models/playlists";
 import { UserContext } from "./UserContext";
+
 import { useRouteMatch } from "react-router-dom";
+import { useSnackbar } from "react-simple-snackbar";
 
 export type PlaylistContextState = {
   loading: Loading;
@@ -35,6 +38,8 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   const [currentPlaylist, setCurrentPlaylist] = useState({ id: "", date_added: null, name: "", user_id: 0 });
 
   const match = useRouteMatch<any>({ path: "/:playlistId/:videoId?" });
+
+  const [openSnackbar] = useSnackbar();
 
   const hydratePlaylists = async () => {
     try {
@@ -74,6 +79,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
         error: null,
       });
     } catch (error) {
+      openSnackbar("Cannot find playlist.");
       setCurrentPlaylistLoading({
         loading: false,
         loaded: false,

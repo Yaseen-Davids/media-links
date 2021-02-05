@@ -90,26 +90,24 @@ export const Filters: FC<FiltersProps> = () => {
     <>
       {showFilters && (
         <Container>
-          <>
-            <DropdownSelect
-              fluid
-              selection
-              value={sort}
-              closeOnChange
-              placeholder="Sort"
-              options={sortOptions}
-              onChange={(_: any, event: any) => handleSortChange(event.value)}
-            />
-            <DropdownSelect
-              fluid
-              selection
-              value={linkState}
-              closeOnChange
-              placeholder="State"
-              options={stateOptions}
-              onChange={(_: any, event: any) => handleStateChange(event.value)}
-            />
-          </>
+          <DropdownSelect
+            fluid
+            selection
+            value={sort}
+            closeOnChange
+            placeholder="Sort"
+            options={sortOptions}
+            onChange={(_: any, event: any) => handleSortChange(event.value)}
+          />
+          <DropdownSelect
+            fluid
+            selection
+            value={linkState}
+            closeOnChange
+            placeholder="State"
+            options={stateOptions}
+            onChange={(_: any, event: any) => handleStateChange(event.value)}
+          />
         </Container>
       )}
     </>

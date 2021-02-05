@@ -9,10 +9,13 @@ export const ProgressBar: React.FC<ProgressBarProps> = ({ }) => {
   const { playing, progress, seek, duration, setProgress, seekTo } = useContext(MediaPlayerContext);
 
   useEffect(() => {
+    const progressBarMain: HTMLDivElement = document.getElementsByClassName("progress-bar-main")[0] as HTMLDivElement;
+    const progressBar: any = document.getElementsByClassName('progress-bar')[0];
+
     if (playing) {
-      const progressBarMain: HTMLDivElement = document.getElementsByClassName("progress-bar-main")[0] as HTMLDivElement;
-      const progressBar: any = document.getElementsByClassName('progress-bar')[0];
       progressBar.style.width = `${new BigNumber(progressBarMain.clientWidth).dividedBy(duration).multipliedBy(progress).toNumber()}px`;
+    } else {
+      progressBar.style.width = 0;
     }
   }, [playing, progress, seek]);
 

@@ -45,36 +45,36 @@ const App: FC = () => {
         <Route component={LoginGuard} />
         <UserProvider>
           <Route component={HydrateUser} />
-          <Route
-            render={() => (
-              <Switch>
-                <Route path="/login" component={Login} />
-                <PlaylistProvider>
-                  <PermissionsProvider>
-                    <Container>
-                      <PageHeader />
-                      <Content>
-                        <Route path="/" exact>
-                          <Container>
-                            <Playlists />
-                          </Container>
-                        </Route>
-                        <Route path="/:playlistId/:mediaId?">
-                          <SnackbarProvider>
+          <SnackbarProvider>
+            <Route
+              render={() => (
+                <Switch>
+                  <Route path="/login" component={Login} />
+                  <PlaylistProvider>
+                    <PermissionsProvider>
+                      <Container>
+                        <PageHeader />
+                        <Content>
+                          <Route path="/" exact>
+                            <Container>
+                              <Playlists />
+                            </Container>
+                          </Route>
+                          <Route path="/:playlistId/:mediaId?">
                             <LinksProvider>
                               <div className="main-container">
                                 <LinksContent />
                               </div>
                             </LinksProvider>
-                          </SnackbarProvider>
-                        </Route>
-                      </Content>
-                    </Container>
-                  </PermissionsProvider>
-                </PlaylistProvider>
-              </Switch>
-            )}
-          />
+                          </Route>
+                        </Content>
+                      </Container>
+                    </PermissionsProvider>
+                  </PlaylistProvider>
+                </Switch>
+              )}
+            />
+          </SnackbarProvider>
         </UserProvider>
       </LoginProvider>
     </Router>

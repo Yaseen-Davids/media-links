@@ -1,13 +1,16 @@
-import React, { createContext, useMemo, useState, useEffect } from "react";
+import React, { createContext, useMemo, useState, useEffect, useContext } from "react";
+
 import { Loading, defaultLoading } from "../models/loading";
 import { MediaLinks } from "../models/media-links";
-import { getAllMediaLinks } from "../lib/media-links";
+import { deleteMediaLink, getAllMediaLinks } from "../lib/media-links";
 import { sortOptions, linkStateOptions } from "../models/filters";
-import { useRouteMatch } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { MediaPlayerContext } from "./MediaPlayerContext";
 
+import { useRouteMatch, useHistory } from "react-router-dom";
+import { useSnackbar } from "react-simple-snackbar";
+
+// static
 const defaultCurrentVideo = { index: 0, author_url: "", author_name: "", removed: 0, id: "", thumbnail_url: "", title: "", date_added: new Date(), provided_name: "" };
-
 const defaultLocalStorage = '{"options":{"autoplay":true,"filters":["song"],"sort":"sortDateDescending","linkState":"active", "volume": 1}}';
 
 type LocalStorageOptions = {
@@ -34,6 +37,7 @@ export type LinksContextState = {
   setCurrentVideo(currentVideo: MediaLinks): void;
   setLocalStorageOptions(which: string, value: any): void;
   toggleFilters(showFilters: boolean): void;
+  handleDeleteLinkById(id: string): void;
 };
 
 export const LinksContext = createContext<LinksContextState>({
@@ -52,10 +56,12 @@ export const LinksContext = createContext<LinksContextState>({
   setCurrentVideo: () => { },
   setLocalStorageOptions: () => { },
   toggleFilters: () => { },
+  handleDeleteLinkById: () => { }
 });
 
 export const LinksProvider: React.FC = ({ children }) => {
   const localStorageOptions: LocalStorageOptions = JSON.parse(localStorage.getItem("options") || defaultLocalStorage).options;
+
   const [loading, setLoading] = useState<Loading>(defaultLoading);
   const [links, setLinks] = useState<MediaLinks[]>([]);
   const [reload, setReload] = useState<boolean>(true);
@@ -63,6 +69,9 @@ export const LinksProvider: React.FC = ({ children }) => {
   const [linkState, setLinkState] = useState<string>(localStorageOptions.linkState);
   const [currentVideo, setCurrentVideo] = useState<MediaLinks>(defaultCurrentVideo);
   const [showFilters, toggleFilters] = useState<boolean>(false);
+
+  const [openSnackbar] = useSnackbar();
+
   const match = useRouteMatch<any>({ path: "/:playlistId/:videoId?" });
   const history = useHistory();
 
@@ -74,6 +83,24 @@ export const LinksProvider: React.FC = ({ children }) => {
       }
     }
     localStorage.setItem("options", JSON.stringify(options));
+  }
+
+  const handleDeleteLinkById = async (id: string) => {
+    // delete link call
+    await deleteMediaLink(id);
+
+    // remove link from state
+    const linkIndex = links.findIndex(link => link.id === id);
+    links.splice(linkIndex, 1);
+
+    // remove link from url
+    history.push(`/${match?.params.playlistId}/`);
+
+    setCurrentVideo(defaultCurrentVideo);
+
+    setLinks([...links]);
+
+    openSnackbar("Link has been removed.");
   }
 
   const setData = async () => {
@@ -97,7 +124,7 @@ export const LinksProvider: React.FC = ({ children }) => {
     } catch (error) {
       setLinks([]);
       setLoading({
-        loaded: false,
+        loaded: true,
         loading: false,
         error: error
       });
@@ -126,7 +153,9 @@ export const LinksProvider: React.FC = ({ children }) => {
   useEffect(() => {
     if (links.length > 0 && match?.params.videoId && match?.params.videoId.length > 0) {
       const video: any = links.find(link => link.id === match.params.videoId);
-      setCurrentVideo(video);
+      if (video) {
+        setCurrentVideo(video);
+      }
     }
   }, [match]);
 
@@ -146,6 +175,7 @@ export const LinksProvider: React.FC = ({ children }) => {
     setCurrentVideo,
     setLocalStorageOptions,
     toggleFilters,
+    handleDeleteLinkById,
   }), [
     localStorageOptions,
     loading,
