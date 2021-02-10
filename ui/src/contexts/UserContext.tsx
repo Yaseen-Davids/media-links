@@ -38,7 +38,8 @@ export const UserProvider: React.FC = ({ children }) => {
         loaded: false,
         error: null,
       });
-      const { data } = await whoami();
+      const token = localStorage.getItem("login-token");
+      const { data } = await whoami(token || "");
       setUser(data);
       setLoading({
         loading: false,

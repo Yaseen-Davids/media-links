@@ -4,16 +4,19 @@ import { login } from "../../lib/user";
 import { UserContext } from "../../contexts/UserContext";
 
 import { Form, Field } from "react-final-form";
-import { Input, Button } from "semantic-ui-react";
+import { Input, Button, Checkbox } from "semantic-ui-react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
+const validate = (value: string) => (value ? undefined : "Required");
+
 export const Login = () => {
   const history = useHistory();
-  const validate = (value: string) => (value ? undefined : "Required");
   const { hydrateUser } = useContext(UserContext);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>(undefined);
+  const [keepLoggedIn, setKeepLoggedIn] = useState<boolean>(false);
 
   return (
     <Container>
@@ -22,10 +25,15 @@ export const Login = () => {
           try {
             setLoading(true);
             setError(undefined);
-            const resp = await login(fields);
+            const resp = await login({ ...fields, keepLoggedIn });
+
             if (resp.status >= 400) {
-              return;
+              throw "Log in failed.";
             }
+
+            const token = resp.data.token;
+            localStorage.setItem("login-token", token);
+
             await hydrateUser();
             await history.replace("/");
           } catch (error) {
@@ -64,6 +72,7 @@ export const Login = () => {
                       </FieldContainer>
                     )}
                   />
+                  <CheckboxStyled label="Keep me logged in" checked={keepLoggedIn} onChange={() => setKeepLoggedIn(!keepLoggedIn)} />
                 </FieldContainerWrapper>
                 <Button color="blue" type="submit" loading={loading} disabled={loading}>Login</Button>
                 {error && <p className="validate-error">{error}</p>}
@@ -118,5 +127,11 @@ const FieldContainer = styled.div`
   &&&&& input {
     margin-top: 5px;
     margin-bottom: 5px;
+  }
+`;
+
+const CheckboxStyled = styled(Checkbox)`
+  &&&&& label {
+    color: #d4d4d4;
   }
 `;

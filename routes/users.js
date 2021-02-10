@@ -1,18 +1,26 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { CreateUser, GetUserById } = require("../repositories/user");
+const uuidv4 = require("uuidv4");
+
+const { CreateUser, updateUserTokenById, GetUserByToken } = require("../repositories/user");
 const { ensureAuthenticated } = require("../repositories/base");
 
-router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
+router.get("/whoami/:token", ensureAuthenticated, async (req, res, next) => {
   try {
-    const user = await GetUserById(req.user.id);
+    const token = req.params.token;
+    const user = await GetUserByToken(token);
     if (!user) {
       return res.status(401).send();
     }
-    return res.json({ ...user }).end();
+    req.logIn(user, (error) => {
+      if (error) {
+        return res.status(401).send();
+      }
+      return res.json({ ...user }).end();
+    });
   } catch (error) {
-    return next(e);
+    return next(error);
   }
 });
 
@@ -25,9 +33,14 @@ router.post("/login", async (req, res, next) => {
       if (!user) {
         throw new Error("Username or password is incorrect");
       }
-      req.logIn(user, (error) => {
+      req.logIn(user, async (error) => {
         if (error) {
           throw new Error(error);
+        }
+        if (req.body.keepLoggedIn) {
+          const token = uuidv4.uuid();
+          await updateUserTokenById(user.id, token);
+          return res.json({ token }).send();
         }
         return res.send();
       });

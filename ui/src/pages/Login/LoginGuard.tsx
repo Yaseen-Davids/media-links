@@ -6,7 +6,8 @@ import { whoami } from "../../lib/user";
 export const checkLogin = async (setLoggedIn: any, history: any) => {
 
   try {
-    const resp = await whoami();
+    const token = localStorage.getItem("login-token");
+    const resp = await whoami(token || "");
     if (resp.status >= 400) {
       throw new Error(resp.statusText);
     }
