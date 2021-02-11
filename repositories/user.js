@@ -11,7 +11,9 @@ const GetUserByUsername = async (username) => {
 
 const GetUserById = async (id) => await knex("users").first({ id: "id", username: "username", email: "email" }).where("id", id);
 
-const GetUserByToken = async (token) => await knex("users").first({ id: "id", username: "username", email: "email", token: "token" }).where("token", token);
+const GetUserByToken = async (token) => await knex("users").first({ id: "id", username: "username", email: "email" }).where({ token });
+
+const checkTokenExists = async (id) => await knex("users").first({ token: "token" }).where("id", id);
 
 const CreateUser = async (person) => {
   return bcrypt.genSalt(10, (err, salt) => {
@@ -31,11 +33,7 @@ const CreateUser = async (person) => {
   });
 };
 
-const updateUserTokenById = async (id, token) => {
-  console.log("id", id);
-  console.log("token", token);
-  return await knex("users").update({ token: token }).where("id", id);
-};
+const updateUserTokenById = async (id, token) => await knex("users").update({ token: token }).where("id", id);
 
 module.exports = {
   GetUserByUsername,
@@ -43,4 +41,5 @@ module.exports = {
   CreateUser,
   updateUserTokenById,
   GetUserByToken,
+  checkTokenExists,
 };

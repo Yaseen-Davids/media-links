@@ -1,13 +1,15 @@
 import React, { useEffect, useContext } from "react";
 import { Redirect, useHistory } from "react-router-dom";
 import { LoginContext } from "../../contexts/LoginContext";
-import { whoami } from "../../lib/user";
+import { tokenLogin, whoami } from "../../lib/user";
 
 export const checkLogin = async (setLoggedIn: any, history: any) => {
 
   try {
     const token = localStorage.getItem("login-token");
-    const resp = await whoami(token || "");
+    await tokenLogin({ username: token || "", password: token || "" });
+
+    const resp = await whoami();
     if (resp.status >= 400) {
       throw new Error(resp.statusText);
     }

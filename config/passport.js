@@ -1,9 +1,27 @@
 const LocalStrategy = require("passport-local").Strategy;
-const { GetUserByUsername, GetUserById } = require("../repositories/user");
+const { GetUserByUsername, GetUserById, GetUserByToken } = require("../repositories/user");
 const bcrypt = require("bcryptjs");
 
 module.exports = (passport) => {
   passport.use(
+    "token",
+    new LocalStrategy(async (username, password, done) => {
+      try {
+        const user = await GetUserByToken(password);
+
+        if (!user) {
+          throw "User does not exist";
+        }
+
+        return done(null, user);
+      } catch (error) {
+        return done(null, false, { message: error });
+      }
+    })
+  );
+
+  passport.use(
+    "local",
     new LocalStrategy(async (username, password, done) => {
       try {
         const user = await GetUserByUsername(username);
