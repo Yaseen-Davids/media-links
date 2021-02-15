@@ -1,5 +1,6 @@
 const knex = require("../knex");
 const bcrypt = require("bcryptjs");
+const uuidv4 = require("uuidv4");
 
 const GetUserByUsername = async (username) => {
   try {
@@ -16,21 +17,20 @@ const GetUserByToken = async (token) => await knex("users").first({ id: "id", us
 const checkTokenExists = async (id) => await knex("users").first({ token: "token" }).where("id", id);
 
 const CreateUser = async (person) => {
-  return bcrypt.genSalt(10, (err, salt) => {
-    if (err) {
-      throw err;
-    }
-    return bcrypt.hash(person.password, salt, async (error, hash) => {
-      if (error) {
-        throw error;
-      }
-      return await knex("users").insert({
-        username: person.username,
-        email: person.email,
-        password: hash,
-      });
-    });
-  });
+  const token = uuidv4.uuid();
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(person.password, salt);
+
+  const user = await knex("users")
+    .insert({
+      username: person.username,
+      email: person.email,
+      password: hash,
+      token: token,
+    })
+    .returning("*");
+
+  return user;
 };
 
 const updateUserTokenById = async (id, token) => await knex("users").update({ token: token }).where("id", id);

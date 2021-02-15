@@ -14,6 +14,7 @@ import { LoginProvider } from "./contexts/LoginContext";
 import { PageHeader } from "./components/PageHeader";
 import { PermissionsProvider } from "./contexts/PermissionsContext";
 import { TokenLoginProvider } from "./contexts/TokenLoginContext";
+import { Register } from "./pages/Register.tsx";
 
 const shouldLoad = (loading: Loading) => {
   return !loading.loading && !loading.loaded && !loading.error;
@@ -52,6 +53,7 @@ const App: FC = () => {
                 render={() => (
                   <Switch>
                     <Route path="/login" component={Login} />
+                    <Route path="/register" component={Register} />
                     <PlaylistProvider>
                       <PermissionsProvider>
                         <Container>

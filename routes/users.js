@@ -55,19 +55,16 @@ router.post("/login", async (req, res, next) => {
         if (error) {
           throw new Error(error);
         }
-        if (req.body.keepLoggedIn) {
-          const result = await checkTokenExists(req.user.id);
-          let token = result.token;
+        const result = await checkTokenExists(req.user.id);
+        let token = result.token;
 
-          if (!token) {
-            const result = await createHashToken();
-            token = result.token;
-            await updateUserTokenById(user.id, result.hash);
-          }
-
-          return res.json({ token }).send();
+        if (!token) {
+          const result = await createHashToken();
+          token = result.token;
+          await updateUserTokenById(user.id, result.hash);
         }
-        return res.json({ token: null }).send();
+
+        return res.json({ token }).send();
       });
     } catch (error) {
       return next(error);
@@ -86,8 +83,14 @@ router.get("/logout", async (req, res, next) => {
 
 router.post("/register", async (req, res, next) => {
   try {
-    await CreateUser(req.body);
-    return res.send();
+    const user = await CreateUser(req.body);
+    req.logIn(user[0], async (error) => {
+      if (error) {
+        throw new Error(error);
+      }
+      const token = user[0].token;
+      return res.json({ token }).send();
+    });
   } catch (error) {
     return next(error);
   }

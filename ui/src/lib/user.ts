@@ -7,8 +7,13 @@ export const tokenLogin = async (fields: { username: string; password: string })
     withCredentials: true,
   });
 
-export const login = async (fields: { username: string; password: string; keepLoggedIn: boolean }) =>
+export const login = async (fields: { username: string; password: string }) =>
   await axios.post("/api/users/login", fields, {
+    withCredentials: true,
+  });
+
+export const register = async (fields: { username: string; password: string; email: string }) =>
+  await axios.post("/api/users/register", fields, {
     withCredentials: true,
   });
 

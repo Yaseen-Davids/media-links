@@ -1,16 +1,14 @@
 import React, { useContext, useState } from "react";
 
-import { login } from "../../lib/user";
+import { register } from "../../lib/user";
 import { UserContext } from "../../contexts/UserContext";
 
 import { Form, Field } from "react-final-form";
-import { Input, Button, Checkbox } from "semantic-ui-react";
+import { Input, Button } from "semantic-ui-react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
-const validate = (value: string) => (value ? undefined : "Required");
-
-export const Login = () => {
+export const Register = () => {
   const history = useHistory();
   const { hydrateUser } = useContext(UserContext);
 
@@ -24,14 +22,35 @@ export const Login = () => {
   return (
     <Container>
       <Form
-        onSubmit={async (fields: { username: string; password: string; }) => {
+        validate={(values: { username: string; email: string; password: string; confirm_password: string; }) => {
+          const errors: any = {};
+
+          if (!values.username) {
+            errors.username = "Please enter a username";
+          }
+          if (!values.email) {
+            errors.email = "Please enter a email address";
+          }
+          if (!values.password) {
+            errors.password = "Please enter a password";
+          }
+          if (!values.confirm_password) {
+            errors.confirm_password = "Please enter confirm your password";
+          }
+          if (values.password != values.confirm_password) {
+            errors.confirm_password = "Passwords do not match";
+          }
+
+          return errors;
+        }}
+        onSubmit={async (fields: { username: string; email: string; password: string; }) => {
           try {
             setLoading(true);
             setError(undefined);
-            const resp = await login({ ...fields });
+            const resp = await register(fields);
 
             if (resp.status >= 400) {
-              throw "Log in failed.";
+              throw "Register failed.";
             }
 
             const token = resp.data.token;
@@ -49,35 +68,15 @@ export const Login = () => {
           <form onSubmit={handleSubmit}>
             <LoginWrapper>
               <LoginContent>
-                <h2>Login</h2>
+                <h2>Register an account</h2>
                 <FieldContainerWrapper>
-                  <Field
-                    type="text"
-                    name="username"
-                    validate={validate}
-                    render={({ meta, input }) => (
-                      <FieldContainer>
-                        <label>Username</label>
-                        <Input {...input} placeholder="Username" fluid />
-                        {meta.error && meta.touched ? <span className="validate-error">Please enter a username</span> : <></>}
-                      </FieldContainer>
-                    )}
-                  />
-                  <Field
-                    type="password"
-                    name="password"
-                    validate={validate}
-                    render={({ meta, input }) => (
-                      <FieldContainer>
-                        <label>Password</label>
-                        <Input {...input} placeholder="Password" fluid />
-                        {meta.error && meta.touched ? <span className="validate-error">Please enter a password</span> : <></>}
-                      </FieldContainer>
-                    )}
-                  />
+                  <TextField type="text" name="username" label="Username" />
+                  <TextField type="email" name="email" label="Email" />
+                  <TextField type="password" name="password" label="Password" />
+                  <TextField type="password" name="confirm_password" label="Confirm Password" />
                 </FieldContainerWrapper>
-                <Button color="blue" type="submit" loading={loading} disabled={loading}>Submit</Button>
-                <Button color="green" type="button" onClick={() => handleRedirect("register")}>Register</Button>
+                <Button color="blue" type="submit" disabled={loading} loading={loading}>Submit</Button>
+                <Button color="green" type="button" onClick={() => handleRedirect("login")}>Login</Button>
                 {error && <p className="validate-error">{error}</p>}
               </LoginContent>
             </LoginWrapper>
@@ -87,6 +86,26 @@ export const Login = () => {
     </Container>
   )
 };
+
+type TextFieldProps = {
+  type: string;
+  name: string;
+  label: string;
+}
+
+const TextField: React.FC<TextFieldProps> = ({ type, name, label }) => (
+  <Field
+    type={type}
+    name={name}
+    render={({ meta, input }) => (
+      <FieldContainer>
+        <label>{label}</label>
+        <Input {...input} placeholder={label} fluid />
+        {meta.error && meta.touched ? <span className="validate-error">{meta.error}</span> : <></>}
+      </FieldContainer>
+    )}
+  />
+)
 
 const Container = styled.div`
   max-height: 100vh;
@@ -130,11 +149,5 @@ const FieldContainer = styled.div`
   &&&&& input {
     margin-top: 5px;
     margin-bottom: 5px;
-  }
-`;
-
-const CheckboxStyled = styled(Checkbox)`
-  &&&&& label {
-    color: #d4d4d4;
   }
 `;

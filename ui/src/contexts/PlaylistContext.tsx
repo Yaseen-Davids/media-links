@@ -109,6 +109,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
 
       // delete playlist
       await deletePlaylistById(playlistId);
+      await hydratePlaylists();
 
     } catch (error) {
       openSnackbar("Error deleting playlist");
