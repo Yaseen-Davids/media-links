@@ -1,3 +1,6 @@
+const bcrypt = require("bcryptjs");
+const uuidv4 = require("uuidv4");
+
 const ensureAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
@@ -6,6 +9,14 @@ const ensureAuthenticated = (req, res, next) => {
   }
 };
 
+const createHashToken = async () => {
+  const token = uuidv4.uuid();
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(token, salt);
+  return { hash, token };
+};
+
 module.exports = {
   ensureAuthenticated,
+  createHashToken,
 };

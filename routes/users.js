@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const uuidv4 = require("uuidv4");
 
-const { CreateUser, updateUserTokenById, GetUserById, checkTokenExists, GetUserByToken } = require("../repositories/user");
-const { ensureAuthenticated } = require("../repositories/base");
+const { CreateUser, updateUserTokenById, GetUserById, checkTokenExists } = require("../repositories/user");
+const { ensureAuthenticated, createHashToken } = require("../repositories/base");
 
 router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
   try {
@@ -19,24 +18,28 @@ router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
 });
 
 router.post("/token/login", async (req, res, next) => {
-  passport.authenticate("token", (err, user) => {
-    try {
-      if (err) {
-        throw new Error(err);
-      }
-      if (!user) {
-        throw new Error("Token is invalid.");
-      }
-      req.logIn(user, async (error) => {
-        if (error) {
-          throw new Error(error);
+  if (req.isAuthenticated()) {
+    return res.send();
+  } else {
+    passport.authenticate("token", (err, user) => {
+      try {
+        if (err) {
+          throw new Error(err);
         }
-        return res.send();
-      });
-    } catch (error) {
-      return next(error);
-    }
-  })(req, res, next);
+        if (!user) {
+          throw new Error("Token is invalid.");
+        }
+        req.logIn(user, async (error) => {
+          if (error) {
+            throw new Error(error);
+          }
+          return res.send();
+        });
+      } catch (error) {
+        return next(error);
+      }
+    })(req, res, next);
+  }
 });
 
 router.post("/login", async (req, res, next) => {
@@ -57,13 +60,14 @@ router.post("/login", async (req, res, next) => {
           let token = result.token;
 
           if (!token) {
-            token = uuidv4.uuid();
-            await updateUserTokenById(user.id, token);
+            const result = await createHashToken();
+            token = result.token;
+            await updateUserTokenById(user.id, result.hash);
           }
 
           return res.json({ token }).send();
         }
-        return res.send();
+        return res.json({ token: null }).send();
       });
     } catch (error) {
       return next(error);

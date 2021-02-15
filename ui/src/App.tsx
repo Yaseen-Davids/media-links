@@ -13,6 +13,7 @@ import { Playlists } from "./pages/Playlists";
 import { LoginProvider } from "./contexts/LoginContext";
 import { PageHeader } from "./components/PageHeader";
 import { PermissionsProvider } from "./contexts/PermissionsContext";
+import { TokenLoginProvider } from "./contexts/TokenLoginContext";
 
 const shouldLoad = (loading: Loading) => {
   return !loading.loading && !loading.loaded && !loading.error;
@@ -41,42 +42,44 @@ const App: FC = () => {
 
   return (
     <Router>
-      <LoginProvider>
-        <Route component={LoginGuard} />
-        <UserProvider>
-          <Route component={HydrateUser} />
-          <SnackbarProvider>
-            <Route
-              render={() => (
-                <Switch>
-                  <Route path="/login" component={Login} />
-                  <PlaylistProvider>
-                    <PermissionsProvider>
-                      <Container>
-                        <PageHeader />
-                        <Content>
-                          <Route path="/" exact>
-                            <Container>
-                              <Playlists />
-                            </Container>
-                          </Route>
-                          <Route path="/:playlistId/:mediaId?">
-                            <LinksProvider>
-                              <div className="main-container">
-                                <LinksContent />
-                              </div>
-                            </LinksProvider>
-                          </Route>
-                        </Content>
-                      </Container>
-                    </PermissionsProvider>
-                  </PlaylistProvider>
-                </Switch>
-              )}
-            />
-          </SnackbarProvider>
-        </UserProvider>
-      </LoginProvider>
+      <TokenLoginProvider>
+        <LoginProvider>
+          <Route component={LoginGuard} />
+          <UserProvider>
+            <Route component={HydrateUser} />
+            <SnackbarProvider>
+              <Route
+                render={() => (
+                  <Switch>
+                    <Route path="/login" component={Login} />
+                    <PlaylistProvider>
+                      <PermissionsProvider>
+                        <Container>
+                          <PageHeader />
+                          <Content>
+                            <Route path="/" exact>
+                              <Container>
+                                <Playlists />
+                              </Container>
+                            </Route>
+                            <Route path="/:playlistId/:mediaId?">
+                              <LinksProvider>
+                                <div className="main-container">
+                                  <LinksContent />
+                                </div>
+                              </LinksProvider>
+                            </Route>
+                          </Content>
+                        </Container>
+                      </PermissionsProvider>
+                    </PlaylistProvider>
+                  </Switch>
+                )}
+              />
+            </SnackbarProvider>
+          </UserProvider>
+        </LoginProvider>
+      </TokenLoginProvider>
     </Router>
   )
 };

@@ -8,6 +8,7 @@ import { UserContext } from "./UserContext";
 
 import { useRouteMatch } from "react-router-dom";
 import { useSnackbar } from "react-simple-snackbar";
+import { TokenLoginContext } from "./TokenLoginContext";
 
 export type PlaylistContextState = {
   loading: Loading;
@@ -33,6 +34,7 @@ export const PlaylistContext = createContext<PlaylistContextState>({
 
 export const PlaylistProvider: React.FC = ({ children }) => {
   const { user } = useContext(UserContext);
+  const { loading: tokenLoginLoading } = useContext(TokenLoginContext);
 
   const [loading, setLoading] = useState<Loading>(defaultLoading);
   const [playlists, setPlaylists] = useState<any>([]);
@@ -116,8 +118,10 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   }
 
   useEffect(() => {
-    hydratePlaylists();
-  }, [user]);
+    if (user.id != 0) {
+      hydratePlaylists();
+    }
+  }, [user, tokenLoginLoading]);
 
   useEffect(() => {
     const playlistId = match?.params.playlistId;

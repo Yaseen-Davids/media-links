@@ -1,14 +1,13 @@
 import React, { useEffect, useContext } from "react";
-import { Redirect, useHistory } from "react-router-dom";
+
+import { useHistory } from "react-router-dom";
+
 import { LoginContext } from "../../contexts/LoginContext";
-import { tokenLogin, whoami } from "../../lib/user";
+import { whoami } from "../../lib/user";
 
 export const checkLogin = async (setLoggedIn: any, history: any) => {
 
   try {
-    const token = localStorage.getItem("login-token");
-    await tokenLogin({ username: token || "", password: token || "" });
-
     const resp = await whoami();
     if (resp.status >= 400) {
       throw new Error(resp.statusText);
@@ -21,11 +20,12 @@ export const checkLogin = async (setLoggedIn: any, history: any) => {
 }
 
 export const LoginGuard: React.FunctionComponent<any> = ({ }) => {
-  const { setLoggedIn } = useContext(LoginContext);
   const history = useHistory();
 
+  const { setLoggedIn } = useContext(LoginContext);
+
   useEffect(() => {
-    checkLogin(setLoggedIn, history);
+    checkLogin(setLoggedIn, history)
   }, [history.location.pathname]);
 
   // if (!loggedIn) {
