@@ -13,18 +13,7 @@ module.exports = (passport) => {
           throw "User does not exist";
         }
 
-        bcrypt.compare(password, user.token, (err, isMatch) => {
-          if (err) {
-            return err;
-          }
-          if (isMatch) {
-            return done(null, user);
-          } else {
-            return done(null, false, {
-              message: "Incorrect Username or Password",
-            });
-          }
-        });
+        return done(null, user);
       } catch (error) {
         return done(null, false, { message: error });
       }

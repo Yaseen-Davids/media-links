@@ -27,6 +27,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ }) => {
   }, [loggedIn]);
 
   const handleLogout = () => {
+    localStorage.setItem("login-token", "");
     logout();
     history.go(0); // refresh page
   }

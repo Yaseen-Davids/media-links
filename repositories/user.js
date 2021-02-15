@@ -19,14 +19,15 @@ const checkTokenExists = async (id) => await knex("users").first({ token: "token
 const CreateUser = async (person) => {
   const token = uuidv4.uuid();
   const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(person.password, salt);
+  const passwordHash = await bcrypt.hash(person.password, salt);
+  const tokenHash = await bcrypt.hash(token, salt);
 
   const user = await knex("users")
     .insert({
       username: person.username,
       email: person.email,
-      password: hash,
-      token: token,
+      password: passwordHash,
+      token: tokenHash,
     })
     .returning("*");
 
