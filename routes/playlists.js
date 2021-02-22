@@ -1,9 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { createPlaylist, getPlaylistByUser, getPlaylistByPlaylistId, updateCurrentPlaylist, deletePlaylistById } = require("../repositories/playlists");
+const { createPlaylist, getPlaylistByUser, getPlaylistByPlaylistId, updateCurrentPlaylist, deletePlaylistById, getYoutubePlaylists } = require("../repositories/playlists");
 const { ensureAuthenticated } = require("../repositories/base");
 
-router.get("/:userId", ensureAuthenticated, async (req, res, next) => {
+router.get("/getYoutubePlaylists", async (req, res, next) => {
+  try {
+    const data = await getYoutubePlaylists();
+    return res.json({ data }).end();
+  } catch (error) {
+    return next(error);
+  }
+});
+
+router.get("/getPlaylistByUser/:userId", ensureAuthenticated, async (req, res, next) => {
   try {
     const { userId } = req.params;
     const data = await getPlaylistByUser(parseInt(userId));

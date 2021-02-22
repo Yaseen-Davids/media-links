@@ -199,6 +199,7 @@ const PlaylistName = styled.div`
 
 const EditInput = styled.input`
   &&&&& {
+    width: 100%;
     text-align: center;
     background-color: transparent;
     padding: 0;

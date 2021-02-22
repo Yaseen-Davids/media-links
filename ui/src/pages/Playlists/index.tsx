@@ -14,7 +14,7 @@ import { Playlist } from "../../models/playlists";
 
 export const Playlists = () => {
   const history = useHistory();
-  const { loading, playlists } = useContext(PlaylistContext);
+  const { loading, playlists, youtubePlaylists, youtubePlaylistLoading } = useContext(PlaylistContext);
   const { loggedIn } = useContext(LoginContext);
 
   const handleOpenPlaylist = (playlist: Playlist) => {
@@ -27,11 +27,15 @@ export const Playlists = () => {
         <PlaylistSection>
           <PlaylistHeaderText>
             <h2>Discover</h2>
+            {youtubePlaylistLoading.loading && <PlaylistLoader active inline />}
           </PlaylistHeaderText>
           <PlaylistLayout>
-            <PlaylistCard title="New music this week" />
-            <PlaylistCard title="US Top 40 Songs This Week" bgcolor="#261132" />
-            <PlaylistCard title="Today's TOP Hits" bgcolor="#58B09C" />
+            {youtubePlaylists.map(playlist => (
+              <PlaylistCard
+                title={playlist.name}
+                onClick={() => handleOpenPlaylist(playlist)}
+              />
+            ))}
           </PlaylistLayout>
         </PlaylistSection>
         {loggedIn && (

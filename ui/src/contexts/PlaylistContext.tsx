@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useMemo, useState } from "
 
 import { defaultLoading } from "../models/loading";
 import { Loading } from "../models/base";
-import { deletePlaylistById, getCurrentPlaylistById, getPlaylistsByUser, updateCurrentPlaylistById } from "../lib/playlists";
+import { deletePlaylistById, getCurrentPlaylistById, getPlaylistsByUser, updateCurrentPlaylistById, getYoutubePlaylists } from "../lib/playlists";
 import { Playlist } from "../models/playlists";
 import { UserContext } from "./UserContext";
 
@@ -14,8 +14,10 @@ export type PlaylistContextState = {
   loading: Loading;
   currentPlaylist: Playlist;
   playlists: Playlist[];
+  youtubePlaylists: Playlist[];
   currentPlaylistLoading: Loading;
   deletingPlaylist: boolean;
+  youtubePlaylistLoading: Loading;
   hydrateCurrentPlaylist(playlistId: string): void;
   handleUpdateCurrentPlaylist(data: any): void;
   handleDeletePlaylist(id?: any): void;
@@ -23,10 +25,12 @@ export type PlaylistContextState = {
 
 export const PlaylistContext = createContext<PlaylistContextState>({
   playlists: [],
+  youtubePlaylists: [],
   deletingPlaylist: false,
   currentPlaylist: { id: "", date_added: null, name: "", user_id: 0 },
   loading: { loading: false, loaded: false, error: null },
   currentPlaylistLoading: { loading: false, loaded: false, error: null },
+  youtubePlaylistLoading: { loading: false, loaded: false, error: null },
   handleDeletePlaylist: () => { },
   hydrateCurrentPlaylist: () => { },
   handleUpdateCurrentPlaylist: () => { },
@@ -37,10 +41,13 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   const { loading: tokenLoginLoading } = useContext(TokenLoginContext);
 
   const [loading, setLoading] = useState<Loading>(defaultLoading);
-  const [playlists, setPlaylists] = useState<any>([]);
   const [currentPlaylistLoading, setCurrentPlaylistLoading] = useState<Loading>(defaultLoading);
+  const [youtubePlaylistLoading, setYoutubePlaylistLoading] = useState<Loading>(defaultLoading);
+
+  const [playlists, setPlaylists] = useState<any>([]);
   const [currentPlaylist, setCurrentPlaylist] = useState({ id: "", date_added: null, name: "", user_id: 0 });
   const [deletingPlaylist, setDeletingPlaylist] = useState<boolean>(false);
+  const [youtubePlaylists, setYoutubePlaylists] = useState<any>([]);
 
   const match = useRouteMatch<any>({ path: "/:playlistId/:videoId?" });
 
@@ -62,6 +69,29 @@ export const PlaylistProvider: React.FC = ({ children }) => {
       });
     } catch (error) {
       setLoading({
+        loading: false,
+        loaded: false,
+        error: error,
+      });
+    }
+  };
+
+  const hydrateYoutubePlaylists = async () => {
+    try {
+      setYoutubePlaylistLoading({
+        loading: true,
+        loaded: false,
+        error: null,
+      });
+      const result = await getYoutubePlaylists();
+      setYoutubePlaylists(result.data.data);
+      setYoutubePlaylistLoading({
+        loading: false,
+        loaded: true,
+        error: null,
+      });
+    } catch (error) {
+      setYoutubePlaylistLoading({
         loading: false,
         loaded: false,
         error: error,
@@ -119,6 +149,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   }
 
   useEffect(() => {
+    hydrateYoutubePlaylists();
     if (user.id != 0) {
       hydratePlaylists();
     }
@@ -142,7 +173,9 @@ export const PlaylistProvider: React.FC = ({ children }) => {
     handleDeletePlaylist,
     handleUpdateCurrentPlaylist,
     deletingPlaylist,
-  }), [loading, currentPlaylistLoading, currentPlaylist, playlists, deletingPlaylist]);
+    youtubePlaylistLoading,
+    youtubePlaylists,
+  }), [loading, currentPlaylistLoading, currentPlaylist, playlists, deletingPlaylist, youtubePlaylistLoading, youtubePlaylists]);
 
   return (
     <PlaylistContext.Provider value={value}>{children}</PlaylistContext.Provider>
