@@ -18,6 +18,7 @@ router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
 });
 
 router.post("/token/login", async (req, res, next) => {
+  console.log("token login authentication check => ", req.isAuthenticated());
   if (req.isAuthenticated()) {
     return res.send();
   } else {

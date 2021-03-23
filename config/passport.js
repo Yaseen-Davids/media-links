@@ -7,7 +7,9 @@ module.exports = (passport) => {
     "token",
     new LocalStrategy(async (username, password, done) => {
       try {
+        console.log("passport token => ", password);
         const user = await GetUserByToken(password);
+        console.log("token user => ", user);
 
         if (!user) {
           throw "User does not exist";

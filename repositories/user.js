@@ -12,7 +12,14 @@ const GetUserByUsername = async (username) => {
 
 const GetUserById = async (id) => await knex("users").first({ id: "id", username: "username", email: "email" }).where("id", id);
 
-const GetUserByToken = async (token) => await knex("users").first({ id: "id", username: "username", email: "email", token: "token" }).where({ token });
+const GetUserByToken = async (token) => {
+  try {
+    return await knex("users").first({ id: "id", username: "username", email: "email", token: "token" }).where({ token });
+  } catch (error) {
+    console.log("GetUserByToken error => ", error);
+    throw error;
+  }
+};
 
 const checkTokenExists = async (id) => await knex("users").first({ token: "token" }).where("id", id);
 

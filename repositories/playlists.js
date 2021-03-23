@@ -2,7 +2,14 @@ const knex = require("../knex");
 
 const getAllPlaylists = async () => await knex.select("*").from("playlists");
 
-const getYoutubePlaylists = async () => await knex.select("*").from("playlists").where("user_id", -99);
+const getYoutubePlaylists = async () => {
+  try {
+    return await knex.select("*").from("playlists").where("user_id", -99);
+  } catch (error) {
+    console.log("getYoutubePlaylists error => ", error);
+    throw error;
+  }
+};
 
 const createPlaylist = async (body) => await knex("playlists").insert({ name: body.name, user_id: body.user_id, date_added: new Date() }).returning("id");
 
