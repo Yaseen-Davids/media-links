@@ -2,8 +2,16 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-const { CreateUser, updateUserTokenById, GetUserById, checkTokenExists } = require("../repositories/user");
-const { ensureAuthenticated, createHashToken } = require("../repositories/base");
+const {
+  CreateUser,
+  updateUserTokenById,
+  GetUserById,
+  checkTokenExists,
+} = require("../repositories/user");
+const {
+  ensureAuthenticated,
+  createHashToken,
+} = require("../repositories/base");
 
 router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
   try {
@@ -18,7 +26,6 @@ router.get("/whoami", ensureAuthenticated, async (req, res, next) => {
 });
 
 router.post("/token/login", async (req, res, next) => {
-  console.log("token login authentication check => ", req.isAuthenticated());
   if (req.isAuthenticated()) {
     return res.send();
   } else {

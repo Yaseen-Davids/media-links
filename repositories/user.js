@@ -10,18 +10,23 @@ const GetUserByUsername = async (username) => {
   }
 };
 
-const GetUserById = async (id) => await knex("users").first({ id: "id", username: "username", email: "email" }).where("id", id);
+const GetUserById = async (id) =>
+  await knex("users")
+    .first({ id: "id", username: "username", email: "email" })
+    .where("id", id);
 
 const GetUserByToken = async (token) => {
   try {
-    return await knex("users").first({ id: "id", username: "username", email: "email", token: "token" }).where({ token });
+    return await knex("users")
+      .first({ id: "id", username: "username", email: "email", token: "token" })
+      .where({ token });
   } catch (error) {
-    console.log("GetUserByToken error => ", error);
     throw error;
   }
 };
 
-const checkTokenExists = async (id) => await knex("users").first({ token: "token" }).where("id", id);
+const checkTokenExists = async (id) =>
+  await knex("users").first({ token: "token" }).where("id", id);
 
 const CreateUser = async (person) => {
   const token = uuidv4.uuid();
@@ -41,7 +46,8 @@ const CreateUser = async (person) => {
   return user;
 };
 
-const updateUserTokenById = async (id, token) => await knex("users").update({ token: token }).where("id", id);
+const updateUserTokenById = async (id, token) =>
+  await knex("users").update({ token: token }).where("id", id);
 
 module.exports = {
   GetUserByUsername,

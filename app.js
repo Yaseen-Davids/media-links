@@ -13,9 +13,9 @@ const redisClient = redis.createClient(process.env.REDIS_URL);
 
 const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
-const youtubeRouter = require("./routes/media-links");
+const linksRouter = require("./routes/media-links");
 const playlistRouter = require("./routes/playlists");
-const youtubePlaylistRouter = require("./routes/youtube");
+const youtubeRouter = require("./routes/youtube");
 
 const app = express();
 
@@ -48,9 +48,9 @@ if (process.env.NODE_ENV === "production") {
 
   app.use("/api/", indexRouter);
   app.use("/api/users", usersRouter);
-  app.use("/api/youtube", youtubeRouter);
+  app.use("/api/links", linksRouter);
   app.use("/api/playlists", playlistRouter);
-  app.use("/api/youtube", youtubePlaylistRouter);
+  app.use("/api/youtubePlaylist", youtubeRouter);
 
   app.get("*", (req, res, next) => {
     res.sendFile(path.join(__dirname, "ui", "build", "index.html"));
@@ -61,9 +61,9 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/api/", indexRouter);
 app.use("/api/users", usersRouter);
-app.use("/api/youtube", youtubeRouter);
+app.use("/api/links", linksRouter);
 app.use("/api/playlists", playlistRouter);
-app.use("/api/youtube", youtubePlaylistRouter);
+app.use("/api/youtubePlaylist", youtubeRouter);
 
 app.use(function (req, res, next) {
   next(createError(404));

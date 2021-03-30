@@ -7,7 +7,7 @@ const { updatePlaylists } = require("../repositories/youtube");
 router.get("/updatePlaylists", async (req, res, next) => {
   try {
     await updatePlaylists();
-    return res.send();
+    return res.json({ message: "Success" }).end();
   } catch (error) {
     return next(error);
   }
