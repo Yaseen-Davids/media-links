@@ -12,7 +12,7 @@ type CreatePlaylistCardProps = {};
 
 const validate = (value: string) => (value ? undefined : "Required");
 
-export const CreatePlaylistCard: React.FC<CreatePlaylistCardProps> = ({ }) => {
+export const CreatePlaylistCard: React.FC<CreatePlaylistCardProps> = ({}) => {
   const { user } = useContext(UserContext);
   const [create, toggleCreate] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -20,18 +20,22 @@ export const CreatePlaylistCard: React.FC<CreatePlaylistCardProps> = ({ }) => {
   const inputRef: any = useRef(null);
 
   return (
-    <Container>
-      {!create ? (
-        <Title onClick={() => toggleCreate(true)}>
-          <Icon name="plus" />
-        </Title>
-      ) : (
+    <Wrapper>
+      <Container>
+        {!create ? (
+          <Title onClick={() => toggleCreate(true)}>
+            <Icon name="plus" />
+          </Title>
+        ) : (
           <InputWrapper>
             <Form
               onSubmit={async (fields: any) => {
                 setLoading(true);
                 try {
-                  const id = await createPlaylist({ ...fields, user_id: user.id });
+                  const id = await createPlaylist({
+                    ...fields,
+                    user_id: user.id,
+                  });
                   history.push(`${id.data.data[0]}/`);
                 } catch (error) {
                   console.log("error", error);
@@ -47,27 +51,51 @@ export const CreatePlaylistCard: React.FC<CreatePlaylistCardProps> = ({ }) => {
                     validate={validate}
                     render={({ meta, input }) => (
                       <>
-                        <FieldInput {...input} focus fluid ref={inputRef} borderColor={meta.error && meta.touched} />
+                        <FieldInput
+                          {...input}
+                          focus
+                          fluid
+                          ref={inputRef}
+                          borderColor={meta.error && meta.touched}
+                        />
                       </>
                     )}
                   />
                   <Actions>
-                    <StyledButton type="reset" style={{ backgroundColor: "transparent", color: "#fff" }} onClick={() => toggleCreate(false)}>Cancel</StyledButton>
-                    <StyledButton type="submit" style={{ backgroundColor: "#1db954", color: "#fff" }} loading={loading}>Create</StyledButton>
+                    <StyledButton
+                      type="reset"
+                      style={{ backgroundColor: "transparent", color: "#fff" }}
+                      onClick={() => toggleCreate(false)}
+                    >
+                      Cancel
+                    </StyledButton>
+                    <StyledButton
+                      type="submit"
+                      style={{ backgroundColor: "#1db954", color: "#fff" }}
+                      loading={loading}
+                    >
+                      Create
+                    </StyledButton>
                   </Actions>
                 </InputBox>
               )}
             />
           </InputWrapper>
         )}
-    </Container>
-  )
+      </Container>
+    </Wrapper>
+  );
 };
+
+const Wrapper = styled.div`
+  padding: 5px;
+  border-radius: 10px;
+`;
 
 const Container = styled.div`
   position: relative;
   display: flex;
-  background: #222;
+  background: #202020;
   height: 200px;
   padding: 10px;
   border-radius: 3px;
@@ -135,7 +163,8 @@ const FieldInput = styled(Input)`
       background: transparent;
       color: #fff;
       padding: 8px;
-      border: ${(props: { borderColor: boolean }) => props.borderColor ? "1px solid #ff2b2b" : "1px solid #fff"};
+      border: ${(props: { borderColor: boolean }) =>
+        props.borderColor ? "1px solid #ff2b2b" : "1px solid #fff"};
     }
   }
 `;

@@ -3,4 +3,6 @@ export type Playlist = {
   date_added: null | Date;
   name: string;
   user_id: number;
+  image: string;
+  links_count: number;
 };

@@ -1,8 +1,20 @@
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { defaultLoading } from "../models/loading";
 import { Loading } from "../models/base";
-import { deletePlaylistById, getCurrentPlaylistById, getPlaylistsByUser, updateCurrentPlaylistById, getYoutubePlaylists } from "../lib/playlists";
+import {
+  deletePlaylistById,
+  getCurrentPlaylistById,
+  getPlaylistsByUser,
+  updateCurrentPlaylistById,
+  getYoutubePlaylists,
+} from "../lib/playlists";
 import { Playlist } from "../models/playlists";
 import { UserContext } from "./UserContext";
 
@@ -27,13 +39,20 @@ export const PlaylistContext = createContext<PlaylistContextState>({
   playlists: [],
   youtubePlaylists: [],
   deletingPlaylist: false,
-  currentPlaylist: { id: "", date_added: null, name: "", user_id: 0 },
+  currentPlaylist: {
+    id: "",
+    date_added: null,
+    name: "",
+    user_id: 0,
+    image: "",
+    links_count: 0,
+  },
   loading: { loading: false, loaded: false, error: null },
   currentPlaylistLoading: { loading: false, loaded: false, error: null },
   youtubePlaylistLoading: { loading: false, loaded: false, error: null },
-  handleDeletePlaylist: () => { },
-  hydrateCurrentPlaylist: () => { },
-  handleUpdateCurrentPlaylist: () => { },
+  handleDeletePlaylist: () => {},
+  hydrateCurrentPlaylist: () => {},
+  handleUpdateCurrentPlaylist: () => {},
 });
 
 export const PlaylistProvider: React.FC = ({ children }) => {
@@ -41,11 +60,22 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   const { loading: tokenLoginLoading } = useContext(TokenLoginContext);
 
   const [loading, setLoading] = useState<Loading>(defaultLoading);
-  const [currentPlaylistLoading, setCurrentPlaylistLoading] = useState<Loading>(defaultLoading);
-  const [youtubePlaylistLoading, setYoutubePlaylistLoading] = useState<Loading>(defaultLoading);
+  const [currentPlaylistLoading, setCurrentPlaylistLoading] = useState<Loading>(
+    defaultLoading
+  );
+  const [youtubePlaylistLoading, setYoutubePlaylistLoading] = useState<Loading>(
+    defaultLoading
+  );
 
   const [playlists, setPlaylists] = useState<any>([]);
-  const [currentPlaylist, setCurrentPlaylist] = useState({ id: "", date_added: null, name: "", user_id: 0 });
+  const [currentPlaylist, setCurrentPlaylist] = useState({
+    id: "",
+    date_added: null,
+    name: "",
+    user_id: 0,
+    image: "",
+    links_count: 0,
+  });
   const [deletingPlaylist, setDeletingPlaylist] = useState<boolean>(false);
   const [youtubePlaylists, setYoutubePlaylists] = useState<any>([]);
 
@@ -108,7 +138,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
       });
       const result = await getCurrentPlaylistById(playlistId);
       if (result.data.data) {
-        setCurrentPlaylist(result.data.data);
+        setCurrentPlaylist(result.data.data[0]);
       } else {
         throw "Cannot find playlist.";
       }
@@ -130,7 +160,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   const handleUpdateCurrentPlaylist = async (data: any) => {
     const result = await updateCurrentPlaylistById(currentPlaylist.id, data);
     setCurrentPlaylist(result.data.data);
-  }
+  };
 
   const handleDeletePlaylist = async (id = undefined) => {
     try {
@@ -140,44 +170,66 @@ export const PlaylistProvider: React.FC = ({ children }) => {
       // delete playlist
       await deletePlaylistById(playlistId);
       await hydratePlaylists();
-
     } catch (error) {
       openSnackbar("Error deleting playlist");
     } finally {
       setDeletingPlaylist(false);
     }
-  }
+  };
 
   useEffect(() => {
-    hydrateYoutubePlaylists();
     if (user.id != 0) {
       hydratePlaylists();
     }
   }, [user, tokenLoginLoading]);
 
   useEffect(() => {
+    hydrateYoutubePlaylists();
+  }, []);
+
+  useEffect(() => {
     const playlistId = match?.params.playlistId;
     if (!playlistId || playlistId.length <= 0) {
-      setCurrentPlaylist({ id: "", date_added: null, name: "", user_id: 0 });
+      setCurrentPlaylist({
+        id: "",
+        date_added: null,
+        name: "",
+        user_id: 0,
+        image: "",
+        links_count: 0,
+      });
     } else {
       hydrateCurrentPlaylist(playlistId);
     }
   }, [match?.params.playlistId]);
 
-  const value = useMemo(() => ({
-    loading,
-    playlists,
-    currentPlaylistLoading,
-    currentPlaylist,
-    hydrateCurrentPlaylist,
-    handleDeletePlaylist,
-    handleUpdateCurrentPlaylist,
-    deletingPlaylist,
-    youtubePlaylistLoading,
-    youtubePlaylists,
-  }), [loading, currentPlaylistLoading, currentPlaylist, playlists, deletingPlaylist, youtubePlaylistLoading, youtubePlaylists]);
+  const value = useMemo(
+    () => ({
+      loading,
+      playlists,
+      currentPlaylistLoading,
+      currentPlaylist,
+      hydrateCurrentPlaylist,
+      handleDeletePlaylist,
+      handleUpdateCurrentPlaylist,
+      deletingPlaylist,
+      youtubePlaylistLoading,
+      youtubePlaylists,
+    }),
+    [
+      loading,
+      currentPlaylistLoading,
+      currentPlaylist,
+      playlists,
+      deletingPlaylist,
+      youtubePlaylistLoading,
+      youtubePlaylists,
+    ]
+  );
 
   return (
-    <PlaylistContext.Provider value={value}>{children}</PlaylistContext.Provider>
-  )
-}
+    <PlaylistContext.Provider value={value}>
+      {children}
+    </PlaylistContext.Provider>
+  );
+};

@@ -1,53 +1,70 @@
-import React from "react";
+import React, { useMemo } from "react";
+
 import styled from "styled-components";
 
 type PlaylistCardProps = {
   title: string;
-  bgcolor?: string;
+  imageSrc: string;
+  linksCount: number;
   onClick?(): void;
-}
+};
 
-export const PlaylistCard: React.FC<PlaylistCardProps> = ({ title, bgcolor, onClick }) => {
+export const PlaylistCard: React.FC<PlaylistCardProps> = ({
+  title,
+  onClick,
+  imageSrc,
+  linksCount,
+}) => {
+  const headTitle = useMemo(() => {
+    const elipseCount = 51;
+    const newTitle =
+      title.length > 52 ? title.substr(0, elipseCount).concat("...") : title;
+    return newTitle;
+  }, [title]);
+
   return (
-    <Container bgcolor={bgcolor ? bgcolor : "#0077B6"} onClick={onClick}>
+    <Container onClick={onClick}>
+      {imageSrc ? <Image src={imageSrc} /> : <NoImage />}
       <Title>
-        <h3>{title}</h3>
+        <p className="title">{headTitle}</p>
+        <p className="subtitle">&bull; {linksCount} Videos</p>
       </Title>
     </Container>
-  )
+  );
 };
 
 const Container = styled.div`
-  display: flex;
-  background-color: ${(props: { bgcolor: string }) => props.bgcolor};
-  height: 200px;
-  padding: 10px;
-  border-radius: 3px;
+  height: 260px;
+  padding: 5px;
   cursor: pointer;
-  transition: opacity 0.12s ease-in;
-  &:hover {
-    opacity: 0.8;
-  }
+`;
+
+const NoImage = styled.div`
+  height: 150px;
+  width: 100%;
+  background-color: #020202;
+  border-radius: 10px;
+`;
+
+const Image = styled.img`
+  height: 150px;
+  width: 100%;
+  border-radius: 10px;
 `;
 
 const Title = styled.div`
   display: flex;
-  width: 100%;
-  align-items: center;
-  text-align: center;
-  h3 {
-    width: 100%;
-    color: #fff;
-    font-size: 22px;
-  }
-`;
+  flex-direction: column;
+  gap: 5px;
 
-const Footer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  h3 {
-    margin: auto 0;
-    color: #fff;
+  .title {
+    font-size: 14px;
+    color: #fefefe;
+    margin: 0;
+    margin-top: 5px;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: #949494;
   }
 `;

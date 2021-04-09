@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
 import { CreateLink } from "./CreateLink";
@@ -8,13 +8,14 @@ import { ControlActions } from "./ControlActions";
 
 import { Card } from "../../components/Card";
 import { ProgressBar } from "../../components/ProgressBar";
-import { Loading } from "../../components/Loading";
+// import { Loading } from "../../components/Loading";
 
 import { LinksContext } from "../../contexts/LinksContext";
 import { MediaPlayerProvider } from "../../contexts/MediaPlayerContext";
 import { PermissionsContext } from "../../contexts/PermissionsContext";
 
 import { MediaLinks } from "../../models/media-links";
+import { LoadingCard } from "../../components/LoadingCard";
 
 type LinksContentProps = {};
 
@@ -22,20 +23,18 @@ const Container = styled.div`
   position: relative;
   height: calc(100% - 50px);
   display: grid;
-  grid-template-areas: 
-  "header header header"
-  "content content playlist"
-  "control control control"
-  ;
+  grid-template-areas:
+    "header header header"
+    "content content playlist"
+    "control control control";
   grid-template-columns: 1fr 1fr 40%;
   grid-template-rows: min-content 1fr min-content;
   grid-row-gap: 20px;
   @media (max-width: 850px) and (min-width: 1px) {
-    grid-template-areas: 
-    "header"
-    "playlist"
-    "control"
-    ;
+    grid-template-areas:
+      "header"
+      "playlist"
+      "control";
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr min-content;
     grid-row-gap: 5px;
@@ -73,6 +72,26 @@ const HeaderActionsWrapper = styled.div`
 
 const CardsWrapper = styled.div`
   overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    cursor: pointer;
+  }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #222;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #444;
+  }
+
   div:last-child {
     margin-bottom: 0px;
   }
@@ -91,7 +110,7 @@ const Controls = styled.div`
   background: #1f1f1f;
 `;
 
-export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
+export const LinksContent: React.FC<LinksContentProps> = ({}) => {
   const { loading, links } = useContext(LinksContext);
   const { canCreateMediaLink } = useContext(PermissionsContext);
 
@@ -99,7 +118,7 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
 
   useEffect(() => {
     if (dataLoading) {
-      if ((!loading.loading && loading.loaded)) {
+      if (!loading.loading && loading.loaded) {
         setDataLoading(false);
       }
     }
@@ -113,27 +132,28 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
         </Content>
         <VideoPlayerContent>
           <HeaderActionsWrapper>
-            {canCreateMediaLink && (
-              <CreateLink />
-            )}
+            {canCreateMediaLink && <CreateLink />}
             <Filters />
           </HeaderActionsWrapper>
           {dataLoading ? (
-            <Loading />
+            <CardsWrapper>
+              {new Array(15).fill(0).map(() => (
+                <LoadingCard />
+              ))}
+            </CardsWrapper>
           ) : (
-              <CardsWrapper>
-                {links.length > 0 ? (
-                  links.map((link: MediaLinks, index: number) => (
-                    <Card key={index} link={link} />
-                  )))
-                  : (
-                    <NoDataContainer>
-                      <p style={{ color: "#fafafa" }}>No links found.</p>
-                    </NoDataContainer>
-                  )
-                }
-              </CardsWrapper>
-            )}
+            <CardsWrapper>
+              {links.length > 0 ? (
+                links.map((link: MediaLinks, index: number) => (
+                  <Card key={index} link={link} />
+                ))
+              ) : (
+                <NoDataContainer>
+                  <p style={{ color: "#fafafa" }}>No links found.</p>
+                </NoDataContainer>
+              )}
+            </CardsWrapper>
+          )}
         </VideoPlayerContent>
         <Controls>
           <ProgressBar />
@@ -141,5 +161,5 @@ export const LinksContent: React.FC<LinksContentProps> = ({ }) => {
         </Controls>
       </Container>
     </MediaPlayerProvider>
-  )
-}
+  );
+};

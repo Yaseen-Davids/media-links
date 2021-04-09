@@ -4,7 +4,24 @@ const getAllPlaylists = async () => await knex.select("*").from("playlists");
 
 const getYoutubePlaylists = async () => {
   try {
-    return await knex.select("*").from("playlists").where("user_id", -99);
+    const { rows } = await knex.raw(
+      `
+      select
+        playlists.*
+        , (
+          select media_links.thumbnail_url
+          from media_links
+          where media_links.playlist_id = playlists.id
+          limit 1
+        ) as image
+        , count(media_links) as links_count
+      from playlists
+      join media_links on media_links.playlist_id = playlists.id
+      where playlists.user_id = -99
+      group by playlists.id, playlists.name, playlists.user_id, playlists.date_added
+      `
+    );
+    return rows;
   } catch (error) {
     throw error;
   }
@@ -15,11 +32,49 @@ const createPlaylist = async (body) =>
     .insert({ name: body.name, user_id: body.user_id, date_added: new Date() })
     .returning("id");
 
-const getPlaylistByUser = async (id) =>
-  await knex.select("*").from("playlists").where("user_id", id);
+const getPlaylistByUser = async (id) => {
+  const { rows } = await knex.raw(
+    `
+      select
+        playlists.*
+        , (
+            select media_links.thumbnail_url
+            from media_links
+            where media_links.playlist_id = playlists.id
+            limit 1
+          ) as image
+        , count(media_links) as links_count
+      from playlists
+      left join media_links on media_links.playlist_id = playlists.id
+      where playlists.user_id = :id
+      group by playlists.id, playlists.name, playlists.user_id, playlists.date_added
+    `,
+    { id }
+  );
+  return rows;
+};
 
-const getPlaylistByPlaylistId = async (id) =>
-  await knex.first("*").from("playlists").where("id", id);
+const getPlaylistByPlaylistId = async (id) => {
+  const { rows } = await knex.raw(
+    `
+      select
+        playlists.*
+        , (
+            select media_links.thumbnail_url
+            from media_links
+            where media_links.playlist_id = playlists.id
+            limit 1
+          ) as image
+        , count(media_links) as links_count
+      from playlists
+      left join media_links on media_links.playlist_id = playlists.id
+      where playlists.id = :id
+      group by playlists.id, playlists.name, playlists.user_id, playlists.date_added
+    `,
+    { id }
+  );
+  return rows;
+};
 
 const updateCurrentPlaylist = async (id, body) => {
   await knex("playlists").update(body).where("id", id);
@@ -27,6 +82,7 @@ const updateCurrentPlaylist = async (id, body) => {
 
   return playlist;
 };
+
 const deletePlaylistById = async (id) =>
   await knex("playlists").del().where("id", id);
 

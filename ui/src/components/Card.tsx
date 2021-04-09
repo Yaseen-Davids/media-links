@@ -1,11 +1,12 @@
 import React, { useContext, useCallback } from "react";
+
 import styled from "styled-components";
 import { Dropdown } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
+
 import { MediaLinks } from "../models/media-links";
-import { deleteMediaLink } from "../lib/media-links";
 import { LinksContext } from "../contexts/LinksContext";
 import { MediaPlayerContext } from "../contexts/MediaPlayerContext";
-import { useHistory, useRouteMatch } from "react-router-dom";
 import { LoginContext } from "../contexts/LoginContext";
 
 const CardContainer = styled.div`
@@ -31,8 +32,9 @@ const CardTitle = styled.div`
   grid-area: title;
   display: grid;
   grid-template-columns: 70px 1fr;
-  grid-template-areas: "img title"
-                       "img author";
+  grid-template-areas:
+    "img title"
+    "img author";
   grid-column-gap: 10px;
   text-align: left;
   color: #d4d4d4;
@@ -57,19 +59,19 @@ const CardTitle = styled.div`
   }
   @media (max-width: 850px) and (min-width: 1px) {
     font-size: 11px;
-  };
+  }
   .link-type {
     text-transform: capitalize;
     @media (max-width: 850px) and (min-width: 1px) {
       font-size: 9px;
-    };
+    }
   }
   .meta-data {
     color: #9f9f9f;
     font-size: 11px;
     @media (max-width: 850px) and (min-width: 1px) {
       font-size: 9px;
-    };
+    }
   }
 `;
 
@@ -128,7 +130,9 @@ type CardProps = {
 };
 
 export const Card: React.FC<CardProps> = ({ link }) => {
-  const { setDuration, setProgress, setPlaying } = useContext(MediaPlayerContext);
+  const { setDuration, setProgress, setPlaying } = useContext(
+    MediaPlayerContext
+  );
   const { currentVideo, handleDeleteLinkById } = useContext(LinksContext);
   const { loggedIn } = useContext(LoginContext);
 
@@ -141,32 +145,46 @@ export const Card: React.FC<CardProps> = ({ link }) => {
     setProgress(0);
   };
 
-  const handleCopyUrl = useCallback((url: string) => {
-    navigator.clipboard.writeText(url);
-  }, [navigator]);
+  const handleCopyUrl = useCallback(
+    (url: string) => {
+      navigator.clipboard.writeText(url);
+    },
+    [navigator]
+  );
 
   return (
-    <CardContainer bgcolor={currentVideo.id === link.id ? "#1a1a1a" : "transparent"}>
+    <CardContainer
+      bgcolor={currentVideo.id === link.id ? "#1a1a1a" : "transparent"}
+    >
       <CardTitleWrapper>
         <CardTitle onClick={handlePlayVideo}>
           <img src={link.thumbnail_url} />
-          <p className="link_title" title={link.title}>{link.title}</p>
-          <p className="link_author_name" title={link.author_name}>{link.author_name}</p>
+          <p className="link_title" title={link.title}>
+            {link.title}
+          </p>
+          <p className="link_author_name" title={link.author_name}>
+            {link.author_name}
+          </p>
         </CardTitle>
         <CardButtons>
-          <DropdownSelect
-            icon="ellipsis vertical"
-            direction="left"
-          >
+          <DropdownSelect icon="ellipsis vertical" direction="left">
             <Dropdown.Menu style={{ zIndex: 100000 }}>
-              <DropdownItem icon="copy" text="Copy link" onClick={() => handleCopyUrl(link.author_url)} />
+              <DropdownItem
+                icon="copy"
+                text="Copy link"
+                onClick={() => handleCopyUrl(link.author_url)}
+              />
               {loggedIn && (
-                <DropdownItem icon="trash" text="Delete" onClick={() => handleDeleteLinkById(link.id)} />
+                <DropdownItem
+                  icon="trash"
+                  text="Delete"
+                  onClick={() => handleDeleteLinkById(link.id)}
+                />
               )}
             </Dropdown.Menu>
           </DropdownSelect>
         </CardButtons>
       </CardTitleWrapper>
-    </CardContainer >
-  )
-}
+    </CardContainer>
+  );
+};
