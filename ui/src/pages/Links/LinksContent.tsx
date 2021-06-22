@@ -11,7 +11,7 @@ import { ProgressBar } from "../../components/ProgressBar";
 // import { Loading } from "../../components/Loading";
 
 import { LinksContext } from "../../contexts/LinksContext";
-import { MediaPlayerProvider } from "../../contexts/MediaPlayerContext";
+// import { MediaPlayerProvider } from "../../contexts/MediaPlayerContext";
 import { PermissionsContext } from "../../contexts/PermissionsContext";
 
 import { MediaLinks } from "../../models/media-links";
@@ -125,41 +125,39 @@ export const LinksContent: React.FC<LinksContentProps> = ({}) => {
   }, [loading, dataLoading]);
 
   return (
-    <MediaPlayerProvider>
-      <Container>
-        <Content>
-          <VideoPlayer />
-        </Content>
-        <VideoPlayerContent>
-          <HeaderActionsWrapper>
-            {canCreateMediaLink && <CreateLink />}
-            <Filters />
-          </HeaderActionsWrapper>
-          {dataLoading ? (
-            <CardsWrapper>
-              {new Array(15).fill(0).map(() => (
-                <LoadingCard />
-              ))}
-            </CardsWrapper>
-          ) : (
-            <CardsWrapper>
-              {links.length > 0 ? (
-                links.map((link: MediaLinks, index: number) => (
-                  <Card key={index} link={link} />
-                ))
-              ) : (
-                <NoDataContainer>
-                  <p style={{ color: "#fafafa" }}>No links found.</p>
-                </NoDataContainer>
-              )}
-            </CardsWrapper>
-          )}
-        </VideoPlayerContent>
-        <Controls>
-          <ProgressBar />
-          <ControlActions />
-        </Controls>
-      </Container>
-    </MediaPlayerProvider>
+    <Container>
+      <Content>
+        <VideoPlayer />
+      </Content>
+      <VideoPlayerContent>
+        <HeaderActionsWrapper>
+          {canCreateMediaLink && <CreateLink />}
+          <Filters />
+        </HeaderActionsWrapper>
+        {dataLoading ? (
+          <CardsWrapper>
+            {new Array(15).fill(0).map(() => (
+              <LoadingCard />
+            ))}
+          </CardsWrapper>
+        ) : (
+          <CardsWrapper>
+            {links.length > 0 ? (
+              links.map((link: MediaLinks, index: number) => (
+                <Card key={index} link={link} />
+              ))
+            ) : (
+              <NoDataContainer>
+                <p style={{ color: "#fafafa" }}>No links found.</p>
+              </NoDataContainer>
+            )}
+          </CardsWrapper>
+        )}
+      </VideoPlayerContent>
+      <Controls>
+        <ProgressBar />
+        <ControlActions />
+      </Controls>
+    </Container>
   );
 };

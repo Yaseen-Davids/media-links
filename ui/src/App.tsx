@@ -1,13 +1,15 @@
 import React, { FC, useEffect } from "react";
-import { LinksContent } from "./pages/Links/LinksContent";
-import { LinksProvider } from "./contexts/LinksContext";
+
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import styled from "styled-components";
+import SnackbarProvider from "react-simple-snackbar";
+
+import { LinksProvider } from "./contexts/LinksContext";
+import { LinksContent } from "./pages/Links/LinksContent";
 import { Login } from "./pages/Login";
 import { UserContext, UserProvider } from "./contexts/UserContext";
 import { LoginGuard } from "./pages/Login/LoginGuard";
 import { Loading } from "./models/base";
-import styled from "styled-components";
-import SnackbarProvider from "react-simple-snackbar";
 import { PlaylistProvider } from "./contexts/PlaylistContext";
 import { Playlists } from "./pages/Playlists";
 import { LoginProvider } from "./contexts/LoginContext";
@@ -15,6 +17,8 @@ import { PageHeader } from "./components/PageHeader";
 import { PermissionsProvider } from "./contexts/PermissionsContext";
 import { TokenLoginProvider } from "./contexts/TokenLoginContext";
 import { Register } from "./pages/Register.tsx";
+import { MediaPlayerProvider } from "./contexts/MediaPlayerContext";
+import BackgroundVideoPlayer from "./pages/BackgroundVideoPlayer";
 
 const shouldLoad = (loading: Loading) => {
   return !loading.loading && !loading.loaded && !loading.error;
@@ -56,23 +60,26 @@ const App: FC = () => {
                     <Route path="/register" component={Register} />
                     <PlaylistProvider>
                       <PermissionsProvider>
-                        <Container>
-                          <PageHeader />
-                          <Content>
-                            <Route path="/" exact>
-                              <Container>
-                                <Playlists />
-                              </Container>
-                            </Route>
-                            <Route path="/:playlistId/:mediaId?">
-                              <LinksProvider>
-                                <div className="main-container">
-                                  <LinksContent />
-                                </div>
-                              </LinksProvider>
-                            </Route>
-                          </Content>
-                        </Container>
+                        <LinksProvider>
+                          <MediaPlayerProvider>
+                            <Container>
+                              <BackgroundVideoPlayer />
+                              <PageHeader />
+                              <Content>
+                                <Route path="/" exact>
+                                  <Container>
+                                    <Playlists />
+                                  </Container>
+                                </Route>
+                                <Route path="/:playlistId/:mediaId?">
+                                  <div className="main-container">
+                                    <LinksContent />
+                                  </div>
+                                </Route>
+                              </Content>
+                            </Container>
+                          </MediaPlayerProvider>
+                        </LinksProvider>
                       </PermissionsProvider>
                     </PlaylistProvider>
                   </Switch>
@@ -83,18 +90,18 @@ const App: FC = () => {
         </LoginProvider>
       </TokenLoginProvider>
     </Router>
-  )
+  );
 };
 
 const Container = styled.div`
   height: 100vh;
   display: grid;
-  grid-template-areas: 
+  grid-template-areas:
     "header"
-    "content"
-  ;
+    "content";
   grid-template-rows: min-content 1fr;
   background-color: #121212;
+  position: relative;
 `;
 
 const Content = styled.div`

@@ -25,7 +25,7 @@ import { TokenLoginContext } from "./TokenLoginContext";
 export type PlaylistContextState = {
   loading: Loading;
   currentPlaylist: Playlist;
-  playlists: Playlist[];
+  userPlaylists: Playlist[];
   youtubePlaylists: Playlist[];
   currentPlaylistLoading: Loading;
   deletingPlaylist: boolean;
@@ -36,7 +36,7 @@ export type PlaylistContextState = {
 };
 
 export const PlaylistContext = createContext<PlaylistContextState>({
-  playlists: [],
+  userPlaylists: [],
   youtubePlaylists: [],
   deletingPlaylist: false,
   currentPlaylist: {
@@ -67,7 +67,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
     defaultLoading
   );
 
-  const [playlists, setPlaylists] = useState<any>([]);
+  const [userPlaylists, setUserPlaylists] = useState<any>([]);
   const [currentPlaylist, setCurrentPlaylist] = useState({
     id: "",
     date_added: null,
@@ -91,7 +91,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
         error: null,
       });
       const result = await getPlaylistsByUser(user.id);
-      setPlaylists(result.data.data);
+      setUserPlaylists(result.data.data);
       setLoading({
         loading: false,
         loaded: true,
@@ -206,7 +206,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
   const value = useMemo(
     () => ({
       loading,
-      playlists,
+      userPlaylists,
       currentPlaylistLoading,
       currentPlaylist,
       hydrateCurrentPlaylist,
@@ -220,7 +220,7 @@ export const PlaylistProvider: React.FC = ({ children }) => {
       loading,
       currentPlaylistLoading,
       currentPlaylist,
-      playlists,
+      userPlaylists,
       deletingPlaylist,
       youtubePlaylistLoading,
       youtubePlaylists,

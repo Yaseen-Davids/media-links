@@ -10,12 +10,13 @@ import { PlaylistContext } from "../../contexts/PlaylistContext";
 import { Playlist } from "../../models/playlists";
 import { CreatePlaylistModal } from "./CreatePlaylistModal";
 import { LoadingCard } from "./LoadingCards";
+import { SortablePlaylist } from "./SortablePlaylist";
 
 export const Playlists = () => {
   const history = useHistory();
   const {
     loading,
-    playlists,
+    userPlaylists,
     youtubePlaylists,
     youtubePlaylistLoading,
   } = useContext(PlaylistContext);
@@ -68,18 +69,18 @@ export const Playlists = () => {
                 onClick={() => openModal(true)}
               />
             </PlaylistHeaderText>
-            <PlaylistLayout>
-              {loading.loading
-                ? new Array(3).fill(0).map(() => <LoadingCard />)
-                : (playlists || []).map((playlist) => (
-                    <PlaylistCard
-                      title={playlist.name}
-                      imageSrc={playlist.image}
-                      linksCount={playlist.links_count}
-                      onClick={() => handleOpenPlaylist(playlist)}
-                    />
-                  ))}
-            </PlaylistLayout>
+            {loading.loading ? (
+              <PlaylistLayout>
+                {new Array(3).fill(0).map(() => (
+                  <LoadingCard />
+                ))}
+              </PlaylistLayout>
+            ) : (
+              <SortablePlaylist
+                playlists={userPlaylists}
+                handleOpenPlaylist={handleOpenPlaylist}
+              />
+            )}
           </PlaylistSection>
         )}
       </ContentWrapper>

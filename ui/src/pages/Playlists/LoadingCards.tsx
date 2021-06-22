@@ -13,15 +13,16 @@ export const LoadingCard = () => {
 
 const Container = styled.div`
   height: 260px;
+  width: 100%;
   padding: 5px;
   opacity: 1;
-  animation: blinker 1s linear infinite;
+  /* animation: blinker 1s linear infinite;
 
   @keyframes blinker {
     50% {
       opacity: 0.5;
     }
-  }
+  } */
 `;
 
 const NoImage = styled.div`

@@ -36,7 +36,11 @@ const getPlaylistByUser = async (id) => {
   const { rows } = await knex.raw(
     `
       select
-        playlists.*
+        playlists.id
+        , playlists.name
+        , playlists.user_id
+        , playlists.date_added
+        , playlists.sortorder
         , (
             select media_links.thumbnail_url
             from media_links
@@ -48,6 +52,7 @@ const getPlaylistByUser = async (id) => {
       left join media_links on media_links.playlist_id = playlists.id
       where playlists.user_id = :id
       group by playlists.id, playlists.name, playlists.user_id, playlists.date_added
+      order by playlists.sortorder
     `,
     { id }
   );

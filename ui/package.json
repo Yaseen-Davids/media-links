@@ -13,6 +13,7 @@
     "@types/react": "^16.9.25",
     "@types/react-dom": "^16.9.5",
     "@types/react-router-dom": "^5.1.5",
+    "@types/sortablejs": "^1.10.6",
     "@types/styled-components": "^5.0.1",
     "axios": "^0.19.2",
     "bignumber.js": "^9.0.0",
@@ -26,8 +27,10 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.1",
     "react-simple-snackbar": "^1.1.10",
+    "react-sortablejs": "^6.0.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.88.2",
+    "sortablejs": "^1.13.0",
     "styled-components": "^5.0.1",
     "typescript": "^3.7.5"
   },

@@ -27,9 +27,20 @@ const VideoWrapper = styled.div`
 
 type VideoPlayerProps = {};
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({}) => {
   const { currentVideo } = useContext(LinksContext);
-  const { playing, autoplay, volume, seek, duration, setDuration, setProgress, setPlaying, playVideoByCurrent, loop } = useContext(MediaPlayerContext);
+  const {
+    playing,
+    autoplay,
+    volume,
+    seek,
+    duration,
+    setDuration,
+    setProgress,
+    setPlaying,
+    playVideoByCurrent,
+    loop,
+  } = useContext(MediaPlayerContext);
 
   const [ended, setEnded] = useState<boolean>(false);
 
@@ -49,7 +60,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
         playVideoByCurrent(currentVideo, 1);
         setEnded(false);
       }
-    };
+    }
   };
 
   useEffect(() => {
@@ -61,7 +72,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
   useEffect(() => {
     if (seek && ref.current) {
       setPlaying(false);
-      const p1 = new BigNumber(seek).multipliedBy(duration).dividedBy(100).toNumber();
+      const p1 = new BigNumber(seek)
+        .multipliedBy(duration)
+        .dividedBy(100)
+        .toNumber();
       ref.current.seekTo(p1);
       setPlaying(true);
     }
@@ -79,7 +93,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
   const handleSkipUnavailable = () => {
     playVideoByCurrent(currentVideo, 1);
     openSnackbar("Skipping Unavailable");
-  }
+  };
 
   return (
     <Container>
@@ -94,10 +108,10 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ }) => {
           onEnded={() => setEnded(true)}
           onPause={() => setPlaying(false)}
           onPlay={() => setPlaying(true)}
-          onProgress={(event) => setProgress(event.playedSeconds)}
           onDuration={(e) => setDuration(e)}
+          onProgress={(event) => setProgress(event.playedSeconds)}
         />
       </VideoWrapper>
     </Container>
-  )
-}
+  );
+};
